@@ -2,7 +2,7 @@ FROM node:20.2.0-alpine
 
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml tsconfig.json .
+COPY package.json pnpm-lock.yaml tsconfig.json ./
 COPY src src
 
 RUN npm i -g pnpm && pnpm i && pnpm build && pnpm prune --prod

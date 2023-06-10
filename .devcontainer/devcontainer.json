@@ -6,11 +6,8 @@
 	"image": "mcr.microsoft.com/devcontainers/typescript-node:0-20",
 	"features": {
 		"ghcr.io/devcontainers/features/github-cli:1": {},
-		"ghcr.io/devcontainers-contrib/features/mongodb-atlas-cli-homebrew:1": {},
-		"ghcr.io/devcontainers-contrib/features/mongosh-homebrew:1": {},
 		"ghcr.io/devcontainers-contrib/features/nestjs-cli:2": {},
-		"ghcr.io/devcontainers-contrib/features/prisma:2": {},
-		"ghcr.io/frntn/devcontainers-features/postman:1": {}
+		"ghcr.io/devcontainers-contrib/features/prisma:2": {}
 	},
 
 	// Features to add to the dev container. More info: https://containers.dev/features.

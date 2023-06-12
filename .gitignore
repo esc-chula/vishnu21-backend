@@ -35,5 +35,6 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 # Exclude all local env files
+.env
 .env.*
 !.env.example

@@ -1,0 +1,96 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Status {
+  Admin
+  Intania106
+  Intania107
+  Testing
+  Unknown
+}
+
+model User {
+  userId      String     @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  studentId   String     @unique
+  telNo       String?
+  lineProfile String?
+  status      Status?
+  Group       Group?     @relation(fields: [groupId], references: [groupId])
+  groupId     String?    @db.ObjectId
+  Post        Post[]
+  GamePlay    GamePlay[]
+}
+
+model Group {
+  groupId     String  @id @default(auto()) @map("_id") @db.ObjectId
+  houseName   String
+  group       String
+  description String?
+  score       Int?
+  members     User[]
+  posts       Post[]
+}
+
+model Post {
+  postId      String    @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String?
+  author      User      @relation(fields: [authorId], references: [userId])
+  group       Group?    @relation(fields: [groupId], references: [groupId])
+  groupId     String?   @db.ObjectId
+  isGlobal    Boolean?  @default(false)
+  authorId    String    @db.ObjectId
+  comments    Comment[]
+  createdAt   DateTime  @default(now())
+}
+
+type Comment {
+  commentId String   @db.ObjectId
+  text      String?
+  userId    String   @db.ObjectId
+  createdAt DateTime @default(now())
+}
+
+model Game {
+  gameId         String      @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  description    String?
+  type           GameType    @default(Choice)
+  scoring        ScoringMode @default(Equal)
+  maxParticipant Int?
+  maxScore       Int?
+  isIndividual   Boolean?    @default(false)
+  createdAt      DateTime    @default(now())
+  GamePlay       GamePlay[]
+}
+
+enum GameType {
+  Choice
+  Text
+  File
+}
+
+enum ScoringMode {
+  Equal
+  Linear
+  Exponential
+  Logarithmic
+  FirstBlood
+}
+
+model GamePlay {
+  gamePlayId String   @id @default(auto()) @map("_id") @db.ObjectId
+  game       Game     @relation(fields: [gameId], references: [gameId])
+  gameId     String   @db.ObjectId
+  user       User     @relation(fields: [userId], references: [userId])
+  userId     String   @db.ObjectId
+  score      Int?
+  createdAt  DateTime @default(now())
+}

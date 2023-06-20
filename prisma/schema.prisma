@@ -33,7 +33,7 @@ enum Role {
   Central
 }
 
-type Contact {
+type Contacts {
   name   String
   phone  String
   remark String
@@ -41,12 +41,12 @@ type Contact {
 }
 
 model Group {
-  groupId     String    @id @default(auto()) @map("_id") @db.ObjectId
+  groupId     String     @id @default(auto()) @map("_id") @db.ObjectId
   houseName   String
   group       String
   description String?
   score       Int?
-  contact     Contact[]
+  contacts    Contacts[]
   members     User[]
   posts       Post[]
 }

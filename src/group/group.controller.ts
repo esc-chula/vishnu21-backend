@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { GroupService } from './group.service';
-import { TEmergency } from './dto/group.dto';
+import { EmergencyDTO } from './dto/emergency.dto';
 
 @Controller('group')
 export class GroupController {
@@ -14,7 +14,7 @@ export class GroupController {
   @Post('/emergency/:groupId')
   async updateEmergency(
     @Param('groupId') groupId: string,
-    @Body('contacts') contacts: TEmergency[],
+    @Body('contacts') contacts: EmergencyDTO[],
   ) {
     return this.groupService.updateEmergency(groupId, contacts);
   }

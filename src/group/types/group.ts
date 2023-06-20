@@ -9,11 +9,4 @@ interface TGroup {
   contacts?: ContactPayload[];
 }
 
-interface TEmergency {
-  name: string;
-  phone: string;
-  remark: string;
-  role: 'Group' | 'Central';
-}
-
-export type { TGroup, TEmergency };
+export type { TGroup };

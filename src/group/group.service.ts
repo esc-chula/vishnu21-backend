@@ -1,7 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { TEmergency, TGroup } from './dto/group.dto';
-import { ContactPayload, GroupPayload } from '@prisma/client';
+import { TGroup } from './types/group';
+import { ContactPayload } from '@prisma/client';
+import { EmergencyDTO } from './dto/emergency.dto';
 
 @Injectable()
 export class GroupService {
@@ -21,7 +22,7 @@ export class GroupService {
 
   async updateEmergency(
     groupId: string,
-    contacts: TEmergency[],
+    contacts: EmergencyDTO[],
   ): Promise<TGroup> {
     try {
       const emergency = await this.prisma.group.update({

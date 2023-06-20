@@ -28,12 +28,25 @@ model User {
   GamePlay    GamePlay[]
 }
 
+enum Role {
+  Group
+  Central
+}
+
+type Contact {
+  name   String
+  phone  String
+  remark String
+  role   Role
+}
+
 model Group {
-  groupId     String  @id @default(auto()) @map("_id") @db.ObjectId
+  groupId     String    @id @default(auto()) @map("_id") @db.ObjectId
   houseName   String
   group       String
   description String?
   score       Int?
+  contact     Contact[]
   members     User[]
   posts       Post[]
 }

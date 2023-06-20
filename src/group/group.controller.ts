@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { GroupService } from './group.service';
 import { TEmergency } from './dto/group.dto';
 
@@ -11,9 +11,9 @@ export class GroupController {
     return this.groupService.getEmergency();
   }
 
-  @Patch('/emergency')
+  @Post('/emergency/:groupId')
   async updateEmergency(
-    @Body('groupId') groupId: string,
+    @Param('groupId') groupId: string,
     @Body('contact') contact: TEmergency,
   ) {
     return this.groupService.updateEmergency(groupId, contact);

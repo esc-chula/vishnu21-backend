@@ -1,10 +1,12 @@
+import { ContactPayload } from '@prisma/client';
+
 interface TGroup {
   groupId: string;
   houseName: string;
   group: string;
   description?: string;
   score?: number;
-  contact?: TEmergency[];
+  contacts?: ContactPayload[];
 }
 
 interface TEmergency {

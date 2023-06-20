@@ -6,16 +6,16 @@ import { TEmergency } from './dto/group.dto';
 export class GroupController {
   constructor(private groupService: GroupService) {}
 
-  @Get('/emergency')
-  async getEmergency() {
-    return this.groupService.getEmergency();
+  @Get('/emergency/:groupId')
+  async getEmergency(@Param('groupId') groupId: string) {
+    return this.groupService.getEmergency(groupId);
   }
 
   @Post('/emergency/:groupId')
   async updateEmergency(
     @Param('groupId') groupId: string,
-    @Body('contact') contact: TEmergency,
+    @Body('contacts') contacts: TEmergency[],
   ) {
-    return this.groupService.updateEmergency(groupId, contact);
+    return this.groupService.updateEmergency(groupId, contacts);
   }
 }

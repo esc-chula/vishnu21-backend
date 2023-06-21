@@ -27,6 +27,7 @@ import { AuthGuard } from './auth/auth.guard';
     }),
     PrismaModule,
     GroupsModule,
+    AuthModule,
     ScoresModule,
     PostsModule,
     CommentsModule,

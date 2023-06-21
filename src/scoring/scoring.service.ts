@@ -6,52 +6,54 @@ export class ScoringService {
     constructor(private prisma: PrismaService) {}
 
     async getScore() {
-        const groups = await this.prisma.group.findMany();
-
         const result = {
             scores: [],
             updatedAt: null,
         };
 
-        for (let i=0;i<groups.length;i++) {
-            result.scores.push({
-                "name": groups[i].houseName,
-                "score": groups[i].score,
+        await this.prisma.group.findMany()
+        .then(groups => {
+            groups.forEach( (group, index) => {
+                result.scores.push({
+                    "name": group.houseName,
+                    "score": group.score,
+                })
+                if(index == 0) result.updatedAt = group.updatedAt;
+                if(group.updatedAt > result.updatedAt) result.updatedAt = group.updatedAt;
             })
-            if(groups[i].updatedAt > result.updatedAt) result.updatedAt = groups[i].updatedAt;
-            if(i == 0) result.updatedAt = groups[i].updatedAt;
-        }
-
+        }) 
         return result;
     }
 
     async getScoreByHouseName(houseName: string) {
-        const group = await this.prisma.group.findFirst({
+        let result = {
+            name: null,
+            score: null,
+            details: [],
+            updatedAt: null,
+        };
+ 
+        await this.prisma.group.findFirst({
             where: {
                 houseName,
             },
             include: {
                 scoreHistory: true,
             }
-        })
-
-        var result = {
-            name: group.houseName,
-            score: group.score,
-            details: [],
-            updatedAt: null,
-        };
-
-        for (let i=0;i<group.scoreHistory.length;i++) {
-            result.details.push({
-                "info": group.scoreHistory[i].info,
-                "score": group.scoreHistory[i].score,
-                "createdAt": group.scoreHistory[i].createdAt,
+        }).then(group => {
+            result = { ...result, name: group.houseName, score: group.score }
+            group.scoreHistory.forEach( (scoreHistory, index) => {
+                result.details.push({
+                    "info": scoreHistory.info,
+                    "score": scoreHistory.score,
+                    "createdAt": scoreHistory.createdAt,
+                })
+                if(scoreHistory.createdAt > result.updatedAt) result.updatedAt = scoreHistory.createdAt;
+                if(index == 0) result.updatedAt = scoreHistory.createdAt;
             })
-            if(group.scoreHistory[i].createdAt > result.updatedAt) result.updatedAt = group.scoreHistory[i].createdAt;
-            if(i == 0) result.updatedAt = group.scoreHistory[i].createdAt;
-        }
-
+        }).catch(() => {
+            throw new ForbiddenException('This house name does not exist in Database.');
+        })
         return result;
     }
 

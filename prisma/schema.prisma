@@ -29,11 +29,12 @@ enum Status {
 }
 
 model Group {
-  groupId       String  @id @default(auto()) @map("_id") @db.ObjectId
+  groupId       String   @id @default(auto()) @map("_id") @db.ObjectId
   houseName     String
-  group         String  @unique
+  group         String   @unique
   description   String?
-  score         Int?
+  score         Int      @default(0)
+  updatedAt     DateTime @default(now())
   members       User[]
   scoreHistory  ScoreHistory[]   
   posts         Post[]

@@ -6,20 +6,22 @@ export class ScoringService {
     constructor(private prisma: PrismaService) {}
 
     async getScore() {
-        const groups = await this.prisma.group.findMany()
+        const groups = await this.prisma.group.findMany();
 
-        var result = {
+        const result = {
             scores: [],
-            updateAt: "5"
+            updatedAt: null,
         };
 
         for (let i=0;i<groups.length;i++) {
             result.scores.push({
                 "name": groups[i].houseName,
-                "score": groups[i].score
+                "score": groups[i].score,
             })
+            if(groups[i].updatedAt > result.updatedAt) result.updatedAt = groups[i].updatedAt;
+            if(i == 0) result.updatedAt = groups[i].updatedAt;
         }
-        
+
         return result;
     }
 
@@ -37,7 +39,7 @@ export class ScoringService {
             name: group.houseName,
             score: group.score,
             details: [],
-            updateAt: "5"
+            updatedAt: null,
         };
 
         for (let i=0;i<group.scoreHistory.length;i++) {
@@ -46,17 +48,20 @@ export class ScoringService {
                 "score": group.scoreHistory[i].score,
                 "createdAt": group.scoreHistory[i].createdAt,
             })
+            if(group.scoreHistory[i].createdAt > result.updatedAt) result.updatedAt = group.scoreHistory[i].createdAt;
+            if(i == 0) result.updatedAt = group.scoreHistory[i].createdAt;
         }
 
         return result;
     }
 
+    // Tese createScoreHistory
     async createScoreHistory() {
         const body = {
-            groupId : "64929dfe3c5ef77807c733a6",
-            score : 10,
-            info : "testtttt",
-            description: "testttttt?"
+            groupId : "649306a9a0cbe65d1799af9e",
+            score : 8,
+            info : "test2",
+            description: "testttttt2"
         }
 
         const group = await this.prisma.group.findFirst({

@@ -8,10 +8,9 @@ export class GroupService {
     async createGroup() {
         await this.prisma.group.create({
             data: {
-                houseName: "nameHouseC",
-                group: "C",
-                description: "testC",
-                score: 0,
+                houseName: "nameHouseB",
+                group: "B",
+                description: "testB",
             },
         });
     }

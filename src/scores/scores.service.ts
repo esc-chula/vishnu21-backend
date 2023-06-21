@@ -18,12 +18,7 @@ export class ScoresService {
       where: {
         scoreId: id,
       },
-      data: {
-        groupId: payload.groupId,
-        score: payload.score,
-        info: payload.info,
-        description: payload.description,
-      },
+      data: { ...payload },
     });
 
     return {

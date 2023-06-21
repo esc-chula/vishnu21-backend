@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -53,5 +53,41 @@ export class ScoringService {
         }
 
         return result;
+    }
+
+    async deleteScoreHistory(_oid: string) {
+        // get scoreHistory by id 
+        const scoreHistory = await this.prisma.scoreHistory.findUnique({
+            where: {
+                scoreId: _oid,
+            },
+            include: {
+                Group: true,
+            }
+        })
+
+        if(!scoreHistory || scoreHistory.scoreId !== _oid)
+            throw new ForbiddenException('Access to resources denied');
+
+        // delete scoreHistory
+        await this.prisma.scoreHistory.delete({
+            where: {
+                scoreId: _oid,
+            },
+        });
+
+        // reduce score of group
+        await this.prisma.group.update({
+            where: {
+                groupId: scoreHistory.groupId,
+            },
+            data: {
+                score: scoreHistory.Group.score - scoreHistory.score,
+            }
+        })
+
+        return {
+            "message": "Delete score history complete",
+        }
     }
 }

@@ -20,9 +20,5 @@ export class EmergencyDTO {
 
   @IsString()
   @IsOptional()
-  remark: string;
-
-  @IsString()
-  @IsEnum(['Group', 'Central'])
-  role: 'Group' | 'Central';
+  remark?: string;
 }

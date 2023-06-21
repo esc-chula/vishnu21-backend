@@ -1,4 +1,4 @@
-import { ContactPayload } from '@prisma/client';
+import { ContactsPayload } from '@prisma/client';
 
 interface TGroup {
   groupId: string;
@@ -6,7 +6,7 @@ interface TGroup {
   group: string;
   description?: string;
   score?: number;
-  contacts?: ContactPayload[];
+  contacts?: ContactsPayload[];
 }
 
 export type { TGroup };

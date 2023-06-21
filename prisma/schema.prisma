@@ -28,16 +28,10 @@ model User {
   GamePlay    GamePlay[]
 }
 
-enum Role {
-  Group
-  Central
-}
-
 type Contacts {
   name   String
   phone  String
-  remark String
-  role   Role
+  remark String?
 }
 
 model Group {

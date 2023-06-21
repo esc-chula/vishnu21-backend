@@ -1,14 +1,16 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { TGroup } from './types/group';
-import { ContactPayload } from '@prisma/client';
-import { EmergencyDTO } from './dto/emergency.dto';
+import { ContactsPayload } from '@prisma/client';
+import { EmergencyDTO } from './types/emergency.dto';
 
 @Injectable()
 export class GroupService {
   constructor(private prisma: PrismaService) {}
 
-  async getEmergency(groupId: string): Promise<{ contacts: ContactPayload[] }> {
+  async getEmergency(
+    groupId: string,
+  ): Promise<{ contacts: ContactsPayload[] }> {
     try {
       const emergency = await this.prisma.group.findUnique({
         where: { groupId },

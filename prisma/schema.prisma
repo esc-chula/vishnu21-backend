@@ -35,14 +35,15 @@ type Contacts {
 }
 
 model Group {
-  groupId     String     @id @default(auto()) @map("_id") @db.ObjectId
-  houseName   String
-  group       String
-  description String?
-  score       Int?
-  contacts    Contacts[]
-  members     User[]
-  posts       Post[]
+  groupId      String         @id @default(auto()) @map("_id") @db.ObjectId
+  houseName    String
+  group        String
+  description  String?
+  score        Int?
+  contacts     Contacts[]
+  members      User[]
+  posts        Post[]
+  ScoreHistory ScoreHistory[]
 }
 
 model Post {
@@ -100,4 +101,15 @@ model GamePlay {
   userId     String   @db.ObjectId
   score      Int?
   createdAt  DateTime @default(now())
+}
+
+model ScoreHistory {
+  scoreId     String   @id @default(auto()) @map("_id") @db.ObjectId
+  Group       Group    @relation(fields: [groupId], references: [groupId])
+  groupId     String   @db.ObjectId
+  score       Int
+  info        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

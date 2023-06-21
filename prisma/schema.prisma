@@ -28,16 +28,23 @@ enum Status {
   Unknown
 }
 
+type Contacts {
+  name   String
+  phone  String
+  remark String?
+}
+
 model Group {
-  groupId       String   @id @default(auto()) @map("_id") @db.ObjectId
-  houseName     String
+  groupId     String     @id @default(auto()) @map("_id") @db.ObjectId
+  houseName   String
   group         String   @unique
-  description   String?
-  score         Int      @default(0)
+  description String?
+  score       Int?        @default(0)
+  contacts    Contacts[]
+  members     User[]
+  posts       Post[]
+  scoreHistory  ScoreHistory[]
   updatedAt     DateTime @default(now())
-  members       User[]
-  scoreHistory  ScoreHistory[]   
-  posts         Post[]
 }
 
 model Post {

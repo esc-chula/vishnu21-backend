@@ -54,42 +54,4 @@ export class ScoringService {
 
         return result;
     }
-
-    // Tese createScoreHistory
-    async createScoreHistory() {
-        const body = {
-            groupId : "649306a9a0cbe65d1799af9e",
-            score : 8,
-            info : "test2",
-            description: "testttttt2"
-        }
-
-        const group = await this.prisma.group.findFirst({
-            where: {
-                groupId: body.groupId,
-            }
-        })
-
-        await this.prisma.scoreHistory.create({
-            data: {
-                Group: {
-                    connect: {
-                        groupId: body.groupId,
-                    },
-                },
-                score : body.score,
-                info : body.info,
-                description: body.description,
-            },
-        });
-
-        await this.prisma.group.update({
-            where: {
-                groupId: body.groupId,
-            },
-            data: {
-                score: group.score+body.score,
-            },
-        })
-    }
 }

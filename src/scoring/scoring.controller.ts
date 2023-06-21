@@ -14,9 +14,4 @@ export class ScoringController {
     getScoreByHouseName(@Param('houseName') houseName: string) {
         return this.scoringService.getScoreByHouseName(houseName);
     }
-
-    @Post('scores')
-    createScoreHistory() {
-        return this.scoringService.createScoreHistory();
-    }
 }

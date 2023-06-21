@@ -9,11 +9,13 @@ import { PostsModule } from './posts/posts.module';
 import { CommentsController } from './comments/comments.controller';
 import { CommentsService } from './comments/comments.service';
 import { CommentsModule } from './comments/comments.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     PrismaModule,
     GroupsModule,
+    AuthModule,
     ScoresModule,
     PostsModule,
     CommentsModule,

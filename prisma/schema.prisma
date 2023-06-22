@@ -39,11 +39,12 @@ model Group {
   houseName    String
   group        String
   description  String?
-  score        Int?
+  score        Int?           @default(0)
   contacts     Contacts[]
   members      User[]
   posts        Post[]
   ScoreHistory ScoreHistory[]
+  updatedAt    DateTime       @default(now())
 }
 
 model Post {

@@ -1,14 +1,11 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller'
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
-import { GroupController } from './group/group.controller';
-import { GroupModule } from './group/group.module';
-import { ScoringModule } from './scoring/scoring.module';
+import { GroupsModule } from './groups/groups.module';
+import { ScoresModule } from './scores/scores.module';
+import { AppController } from './app.controller';
 
 @Module({
-  imports: [PrismaModule, GroupModule, ScoringModule,],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [PrismaModule, GroupsModule, ScoresModule],
 })
 export class AppModule {}

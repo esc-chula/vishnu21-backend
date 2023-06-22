@@ -1,6 +1,5 @@
 import {
   IsByteLength,
-  IsEnum,
   IsNotEmpty,
   IsOptional,
   IsPhoneNumber,
@@ -22,3 +21,4 @@ export class EmergencyDTO {
   @IsOptional()
   remark?: string;
 }
+

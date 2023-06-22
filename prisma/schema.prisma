@@ -1,10 +1,18 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
 generator client {
   provider = "prisma-client-js"
 }
 
-datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
+enum Status {
+  Admin
+  Intania106
+  Intania107
+  Testing
+  Unknown
 }
 
 model User {
@@ -20,14 +28,6 @@ model User {
   GamePlay    GamePlay[]
 }
 
-enum Status {
-  Admin
-  Intania106
-  Intania107
-  Testing
-  Unknown
-}
-
 type Contacts {
   name   String
   phone  String
@@ -35,16 +35,16 @@ type Contacts {
 }
 
 model Group {
-  groupId     String     @id @default(auto()) @map("_id") @db.ObjectId
-  houseName   String
-  group         String   @unique
-  description String?
-  score       Int?        @default(0)
-  contacts    Contacts[]
-  members     User[]
-  posts       Post[]
-  scoreHistory  ScoreHistory[]
-  updatedAt     DateTime @default(now())
+  groupId      String         @id @default(auto()) @map("_id") @db.ObjectId
+  houseName    String
+  group        String
+  description  String?
+  score        Int?           @default(0)
+  contacts     Contacts[]
+  members      User[]
+  posts        Post[]
+  ScoreHistory ScoreHistory[]
+  updatedAt    DateTime       @default(now())
 }
 
 model Post {
@@ -105,11 +105,12 @@ model GamePlay {
 }
 
 model ScoreHistory {
-  scoreId           String   @id @default(auto()) @map("_id") @db.ObjectId
-  Group             Group     @relation(fields: [groupId], references: [groupId])
-  groupId           String    @db.ObjectId
-  score             Int
-  info              String
-  description       String
-  createdAt         DateTime @default(now())
+  scoreId     String   @id @default(auto()) @map("_id") @db.ObjectId
+  Group       Group    @relation(fields: [groupId], references: [groupId])
+  groupId     String   @db.ObjectId
+  score       Int
+  info        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

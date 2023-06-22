@@ -34,8 +34,8 @@ export class PostsService {
     const post = this.prisma.post.update({
       where: { postId: id },
       data: {
-        ...payload,
         isGlobal: payload.groupId ? false : true,
+        ...payload,
       },
     });
     return post;

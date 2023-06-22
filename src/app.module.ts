@@ -10,8 +10,7 @@ import { CommentsController } from './comments/comments.controller';
 import { CommentsService } from './comments/comments.service';
 import { CommentsModule } from './comments/comments.module';
 import { AuthModule } from './auth/auth.module';
-import { UserService } from './user/user.service';
-import { UserModule } from './user/user.module';
+import { AuthService } from './auth/auth.service';
 
 @Module({
   imports: [

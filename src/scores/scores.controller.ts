@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Patch } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { ScoresService } from './scores.service';
 import { ScoresHistoryDTO } from './types/scores.dto';
 
@@ -7,8 +15,8 @@ export class ScoresController {
   constructor(private scoresService: ScoresService) {}
 
   @Get()
-  getScore() {
-    return this.scoresService.getScore();
+  getScores() {
+    return this.scoresService.getScores();
   }
 
   @Get('/:houseName')
@@ -16,6 +24,13 @@ export class ScoresController {
     return this.scoresService.getScoreByHouseName(houseName);
   }
 
+  @Post()
+  async createScoreHistory(
+    @Body() scoresHistoryDTO: ScoresHistoryDTO,
+  ): Promise<{ scoreId: string; createdAt: Date }> {
+    return await this.scoresService.createScoreHistory(scoresHistoryDTO);
+  }
+  
   @Patch('/:id')
   updateScores(@Param('id') id: string, @Body() payload: ScoresHistoryDTO) {
     return this.scoresService.updateScores(id, payload);
@@ -23,6 +38,6 @@ export class ScoresController {
 
   @Delete('/:_oid')
   deleteScoreHistory(@Param('_oid') _oid: string) {
-      return this.scoresService.deleteScoreHistory(_oid);
+    return this.scoresService.deleteScoreHistory(_oid);
   }
 }

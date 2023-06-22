@@ -38,6 +38,7 @@ export class ScoresService {
       details: [],
       updatedAt: null,
     };
+
     try {
       await this.prisma.group
         .findFirstOrThrow({

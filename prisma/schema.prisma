@@ -47,16 +47,22 @@ model Group {
 }
 
 model Post {
-  postId      String    @id @default(auto()) @map("_id") @db.ObjectId
+  postId      String   @id @default(auto()) @map("_id") @db.ObjectId
   title       String
   description String?
-  author      User      @relation(fields: [authorId], references: [userId])
-  group       Group?    @relation(fields: [groupId], references: [groupId])
-  groupId     String?   @db.ObjectId
-  isGlobal    Boolean?  @default(false)
-  authorId    String    @db.ObjectId
-  comments    Comment[]
-  createdAt   DateTime  @default(now())
+  content     String
+  isGlobal    Boolean? @default(false)
+
+  author   User   @relation(fields: [authorId], references: [userId])
+  authorId String @db.ObjectId
+
+  group   Group?  @relation(fields: [groupId], references: [groupId])
+  groupId String? @db.ObjectId
+
+  comments Comment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 type Comment {

@@ -120,3 +120,11 @@ model ScoreHistory {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+model Stamp {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  stampId   String 
+  stampName String
+  slug      String
+  timestamp Int
+}

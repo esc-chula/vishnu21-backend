@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { v4 as uuidv4 } from 'uuid';
 import * as qrcode from 'qrcode';
@@ -7,18 +7,24 @@ import * as qrcode from 'qrcode';
 export class StampsService {
   constructor(private prisma: PrismaService) {}
 
-  async generateStamp(slug: string) {
+  async generateStamp(slug: string): Promise< { qrCode: string; }>  {
     const newStampId = uuidv4();
-    await this.prisma.stamp.update({
-      where: {
-        slug,
-      },
-      data: {
-        stampId: newStampId,
-      },
-    });
-
-    const qrCode =  await qrcode.toDataURL(newStampId)
+    let qrCode: string;
+    try {
+      await this.prisma.stamp.update({
+        where: {
+          slug,
+        },
+        data: {
+          stampId: newStampId,
+        },
+      });
+  
+      qrCode =  await qrcode.toDataURL(newStampId)
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+    
     return { qrCode : qrCode };
   }
 }

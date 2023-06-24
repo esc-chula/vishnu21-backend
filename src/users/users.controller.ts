@@ -11,16 +11,4 @@ export class UsersController {
       return await this.usersService.getUsers();
     }
 
-    // temp
-    @Post()
-    async createUser(@Body() data){
-      const {groupId, ...rest} = data;
-      return await this.usersService.createUser(groupId, rest);
-    }
-
-    @Post('group')
-    async createGroup(@Body() data: Prisma.GroupCreateInput){
-      return await this.usersService.createGroup(data);
-    }
-
 }

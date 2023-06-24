@@ -1,15 +1,9 @@
 import {
   Controller,
   Get,
-  Param,
-  Res,
+  Param
 } from '@nestjs/common';
 import { StampsService } from './stamps.service';
-import { Response } from 'express';
-import * as qrcode from 'qrcode';
-import { v4 as uuidv4 } from 'uuid';
-import sharp from 'sharp';
-import bufferImage from 'buffer-image';
 
 @Controller('users/stamp')
 export class StampsController {

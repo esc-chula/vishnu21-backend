@@ -123,8 +123,8 @@ model ScoreHistory {
 
 model Stamp {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  stampId   String 
-  stampName String
-  slug      String
+  stampId   String   @unique
+  stampName String   @unique
+  slug      String   @unique
   timestamp Int
 }

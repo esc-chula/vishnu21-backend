@@ -1,0 +1,138 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Status {
+  Admin
+  Intania106
+  Intania107
+  Testing
+  Unknown
+}
+
+model User {
+  userId      String     @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  studentId   String     @unique
+  telNo       String?
+  lineProfile String?
+  status      Status?
+  Group       Group?     @relation(fields: [groupId], references: [groupId])
+  groupId     String?    @db.ObjectId
+  Post        Post[]
+  GamePlay    GamePlay[]
+  Comment     Comment[]
+}
+
+type Contacts {
+  name   String
+  phone  String
+  remark String?
+}
+
+model Group {
+  groupId      String         @id @default(auto()) @map("_id") @db.ObjectId
+  houseName    String
+  group        String
+  description  String?
+  score        Int?           @default(0)
+  contacts     Contacts[]
+  members      User[]
+  posts        Post[]
+  ScoreHistory ScoreHistory[]
+  updatedAt    DateTime       @default(now())
+}
+
+model Post {
+  postId      String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String?
+  content     String
+  isGlobal    Boolean? @default(false)
+
+  author   User   @relation(fields: [authorId], references: [userId])
+  authorId String @db.ObjectId
+
+  group   Group?  @relation(fields: [groupId], references: [groupId])
+  groupId String? @db.ObjectId
+
+  comments Comment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Comment {
+  commentId String @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+
+  Post   Post   @relation(fields: [postId], references: [postId])
+  postId String @db.ObjectId
+
+  author   User   @relation(fields: [authorId], references: [userId])
+  authorId String @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Game {
+  gameId         String      @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  description    String?
+  type           GameType    @default(Choice)
+  scoring        ScoringMode @default(Equal)
+  maxParticipant Int?
+  maxScore       Int?
+  isIndividual   Boolean?    @default(false)
+  createdAt      DateTime    @default(now())
+  GamePlay       GamePlay[]
+}
+
+enum GameType {
+  Choice
+  Text
+  File
+}
+
+enum ScoringMode {
+  Equal
+  Linear
+  Exponential
+  Logarithmic
+  FirstBlood
+}
+
+model GamePlay {
+  gamePlayId String   @id @default(auto()) @map("_id") @db.ObjectId
+  game       Game     @relation(fields: [gameId], references: [gameId])
+  gameId     String   @db.ObjectId
+  user       User     @relation(fields: [userId], references: [userId])
+  userId     String   @db.ObjectId
+  score      Int?
+  createdAt  DateTime @default(now())
+}
+
+model ScoreHistory {
+  scoreId     String   @id @default(auto()) @map("_id") @db.ObjectId
+  Group       Group    @relation(fields: [groupId], references: [groupId])
+  groupId     String   @db.ObjectId
+  score       Int
+  info        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Stamp {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  stampId   String   @unique
+  stampName String   @unique
+  slug      String   @unique
+  timestamp Int
+}

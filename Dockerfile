@@ -28,6 +28,8 @@ COPY --chown=node:node --from=development /usr/src/app/node_modules ./node_modul
 
 COPY --chown=node:node . .
 
+RUN npm run prisma:generate
+
 RUN npm run build
 
 ENV NODE_ENV production

@@ -26,6 +26,7 @@ model User {
   groupId     String?    @db.ObjectId
   Post        Post[]
   GamePlay    GamePlay[]
+  Comment     Comment[]
 }
 
 type Contacts {
@@ -66,11 +67,18 @@ model Post {
   updatedAt DateTime @updatedAt
 }
 
-type Comment {
-  commentId String   @db.ObjectId
-  text      String?
-  userId    String   @db.ObjectId
+model Comment {
+  commentId String @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+
+  Post   Post   @relation(fields: [postId], references: [postId])
+  postId String @db.ObjectId
+
+  author   User   @relation(fields: [authorId], references: [userId])
+  authorId String @db.ObjectId
+
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Game {

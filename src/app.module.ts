@@ -19,6 +19,5 @@ import { CommentsModule } from './comments/comments.module';
     PostsModule,
     CommentsModule,
     StampsModule,
-  ],
- 
+  ] 
 export class AppModule {}

@@ -6,9 +6,19 @@ import { ScoresModule } from './scores/scores.module';
 import { AppController } from './app.controller';
 import { PostsController } from './posts/posts.controller';
 import { PostsModule } from './posts/posts.module';
+import { CommentsController } from './comments/comments.controller';
+import { CommentsService } from './comments/comments.service';
+import { CommentsModule } from './comments/comments.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
-  imports: [PrismaModule, GroupsModule, ScoresModule, PostsModule, UsersModule],
+  imports: [
+    PrismaModule,
+    GroupsModule,
+    ScoresModule,
+    PostsModule,
+    CommentsModule,
+    UsersModule
+  ],
 })
 export class AppModule {}

@@ -33,4 +33,4 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: vishnu21st/backend:${{ env.BRANCH }}
+          tags: registry.patrickchodev.com/vishnu21st/backend:${{ env.BRANCH }}

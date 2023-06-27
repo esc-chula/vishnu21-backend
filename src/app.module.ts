@@ -17,12 +17,9 @@ import { AuthService } from './auth/auth.service';
     PrismaModule,
     GroupsModule,
     AuthModule,
-    UserModule,
     ScoresModule,
     PostsModule,
     CommentsModule,
-    ,
-    UserService,
   ],
 })
 export class AppModule {}

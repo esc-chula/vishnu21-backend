@@ -1,12 +1,50 @@
-FROM node:20.2.0-alpine
+###################
+# BUILD FOR LOCAL DEVELOPMENT
+###################
 
-WORKDIR /app
+FROM node:lts-alpine As development
 
-COPY package.json pnpm-lock.yaml tsconfig.json ./
-COPY src src
+WORKDIR /usr/src/app
 
-RUN npm i -g pnpm && pnpm i && pnpm build && pnpm prune --prod
+COPY --chown=node:node package*.json ./
 
-ENV BACKEND_PORT=3000
+RUN npm ci
 
-ENTRYPOINT [ "node", "dist/main.js" ]
+COPY --chown=node:node . .
+
+USER node
+
+###################
+# BUILD FOR PRODUCTION
+###################
+
+FROM node:lts-alpine As build
+
+WORKDIR /usr/src/app
+
+COPY --chown=node:node package*.json ./
+
+COPY --chown=node:node --from=development /usr/src/app/node_modules ./node_modules
+
+COPY --chown=node:node . .
+
+RUN npm run prisma:generate
+
+RUN npm run build
+
+ENV NODE_ENV production
+
+RUN npm ci --only=production && npm cache clean --force
+
+USER node
+
+###################
+# PRODUCTION
+###################
+
+FROM node:lts-alpine As production
+
+COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
+COPY --chown=node:node --from=build /usr/src/app/dist ./dist
+
+CMD [ "node", "dist/main.js" ]

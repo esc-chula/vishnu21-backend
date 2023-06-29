@@ -10,9 +10,8 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  docker:
+  build-push:
     runs-on: ubuntu-latest
-    container: node:lts
     steps:
       -
         name: Checkout
@@ -42,7 +41,6 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v4
         with:
-          context: .
           target: production
           platforms: linux/amd64,linux/arm64
           push: true

@@ -10,6 +10,7 @@ import { StampsModule } from './stamps/stamps.module';
 import { CommentsController } from './comments/comments.controller';
 import { CommentsService } from './comments/comments.service';
 import { CommentsModule } from './comments/comments.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { CommentsModule } from './comments/comments.module';
     ScoresModule,
     PostsModule,
     CommentsModule,
-    StampsModule,
+    UsersModule,
+    StampsModule
   ],
 })
 export class AppModule {}

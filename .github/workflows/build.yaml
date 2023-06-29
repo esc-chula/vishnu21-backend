@@ -12,6 +12,7 @@ env:
 jobs:
   docker:
     runs-on: ubuntu-latest
+    container: node:lts
     steps:
       -
         name: Checkout

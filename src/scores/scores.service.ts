@@ -3,7 +3,7 @@ import {
   Injectable,
   BadRequestException,
 } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '@/prisma/prisma.service';
 import { ScoresHistoryDTO } from './types/scores.dto';
 
 @Injectable()

@@ -9,7 +9,7 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { IS_PUBLIC_KEY } from './auth.decorator';
-import { UsersService } from '../users/users.service';
+import { UsersService } from '@/users/users.service';
 import { Roles } from '@prisma/client';
 
 @Injectable()

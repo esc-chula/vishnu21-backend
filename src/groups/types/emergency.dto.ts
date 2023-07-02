@@ -21,4 +21,3 @@ export class EmergencyDTO {
   @IsOptional()
   remark?: string;
 }
-

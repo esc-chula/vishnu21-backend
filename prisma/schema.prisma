@@ -15,6 +15,15 @@ enum Status {
   Unknown
 }
 
+enum Roles {
+  User
+  Admin
+  Activity
+  Board
+  IT
+  HeadHouse
+}
+
 model User {
   userId      String     @id @default(auto()) @map("_id") @db.ObjectId
   name        String
@@ -22,6 +31,7 @@ model User {
   telNo       String?
   lineProfile String?
   status      Status?
+  roles       Roles[]    @default([User])
   Group       Group?     @relation(fields: [groupId], references: [groupId])
   groupId     String?    @db.ObjectId
   Post        Post[]
@@ -130,9 +140,9 @@ model ScoreHistory {
 }
 
 model Stamp {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  stampId   String   @unique
-  stampName String   @unique
-  slug      String   @unique
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  stampId   String @unique
+  stampName String @unique
+  slug      String @unique
   timestamp Int
 }

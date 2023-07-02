@@ -15,7 +15,7 @@ export class PatchGroupDTO {
   @IsString()
   @IsNotEmpty()
   readonly longName: string;
-  
+
   @IsString()
   readonly description: string;
 

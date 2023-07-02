@@ -34,7 +34,7 @@ RUN npm run build
 
 ENV NODE_ENV production
 
-RUN npm ci --omit=dev
+RUN npm ci
 
 USER node
 

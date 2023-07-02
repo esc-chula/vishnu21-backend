@@ -1,11 +1,4 @@
-import {
-  IsByteLength,
-  IsEnum,
-  IsNotEmpty,
-  IsOptional,
-  IsPhoneNumber,
-  IsString,
-} from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class PatchGroupDTO {
   @IsString()
@@ -15,7 +8,7 @@ export class PatchGroupDTO {
   @IsString()
   @IsNotEmpty()
   readonly longName: string;
-  
+
   @IsString()
   readonly description: string;
 

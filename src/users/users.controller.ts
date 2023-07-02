@@ -1,14 +1,28 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { Prisma } from '@prisma/client';
+import { AuthService } from '@/auth/auth.service';
+import { UserLoginDto } from './users.dto';
+import { PublicRoute } from '@/auth/auth.decorator';
 
 @Controller('users')
 export class UsersController {
-    constructor(private usersService: UsersService){}
-    
-    @Get()
-    async getUsers(){
-      return await this.usersService.getUsers();
-    }
+  constructor(
+    private usersService: UsersService,
+    private readonly authService: AuthService,
+  ) {}
 
+  @PublicRoute()
+  @Post('login')
+  async userLogin(@Body() loginDto: UserLoginDto) {
+    return await this.authService
+      .signIn(loginDto.studentId, loginDto.password)
+      .then((userToken) => {
+        return { token: userToken };
+      });
+  }
+
+  @Get()
+  async getUsers() {
+    return await this.usersService.getUsers();
+  }
 }

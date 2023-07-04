@@ -146,3 +146,11 @@ model Stamp {
   slug      String @unique
   timestamp Int
 }
+
+model Faq {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  event    String
+  question String
+  answer   String
+  priority Int?   @default(0)
+}

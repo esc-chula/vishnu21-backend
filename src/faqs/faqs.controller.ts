@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Body, Patch } from '@nestjs/common';
 import { FaqsService } from './faqs.service';
 
 @Controller('faq')
@@ -8,5 +8,10 @@ export class FaqsController {
   @Get('/:event')
   async getFaqByEvent(@Param('event') event: string) {
     return await this.faqsService.getFaqByEvent(event);
+  }
+
+  @Patch('/:id')
+  updatePost(@Param('id') id: string, @Body() payload: any) {
+    return this.faqsService.updateFaq(id, payload);
   }
 }

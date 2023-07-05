@@ -13,6 +13,7 @@ import { ConfigModule } from '@nestjs/config';
 import { environmentValidator } from './schema';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
+import { GamesModule } from './games/games.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { AuthGuard } from './auth/auth.guard';
     UsersModule,
     StampsModule,
     AuthModule,
+    GamesModule,
   ],
   controllers: [AppController],
   providers: [

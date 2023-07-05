@@ -15,15 +15,13 @@ export class GamesController {
   }
 
   @Patch('/:id')
-  @PublicRoute()
-  // @AllowRoles(Roles.Admin, Roles.IT, Roles.Activity)
+  @AllowRoles(Roles.Admin, Roles.IT, Roles.Activity)
   async updateGame(@Param('id') id: string, @Body() body: updateGameDTO) {
     return await this.gamesService.updateGame(id, body);
   }
 
   @Delete('/:id')
-  @PublicRoute()
-  // @AllowRoles(Roles.Admin, Roles.IT, Roles.Activity)
+  @AllowRoles(Roles.Admin, Roles.IT, Roles.Activity)
   async deleteGame(@Param('id') id: string) {
     return await this.gamesService.deleteGame(id);
   }

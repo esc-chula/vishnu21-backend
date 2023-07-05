@@ -17,6 +17,7 @@ export class StampsService {
         },
         data: {
           stampId: newStampId,
+          timestamp: Date.now()
         },
       });
 

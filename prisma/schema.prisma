@@ -148,7 +148,7 @@ model Stamp {
 }
 
 model Faq {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  faqId    String @id @default(auto()) @map("_id") @db.ObjectId
   event    String
   question String
   answer   String

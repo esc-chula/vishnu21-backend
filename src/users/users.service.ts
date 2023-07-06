@@ -19,7 +19,12 @@ export class UsersService {
           {
             $group: {
               _id: '$status',
-              data: { $push: { name: '$name', profile: '$lineProfile' } },
+              data: {
+                $push: {
+                  name: '$name',
+                  profile: { $ifNull: ['$lineProfile', ''] },
+                },
+              },
             },
           },
         ],
@@ -45,6 +50,7 @@ export class UsersService {
 
   async validateUserRole(userId: string, includes: Roles[], denied?: Roles[]) {
     const roles = await this.getUserRoles(userId);
+    console.log(roles);
     return roles.roles.some(
       (r) => includes.includes(r) && !denied?.includes(r),
     );

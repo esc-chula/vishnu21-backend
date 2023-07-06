@@ -12,6 +12,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { environmentValidator } from './schema';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './auth/auth.guard';
+import { GamesModule } from './games/games.module';
 
 @Module({
   imports: [
@@ -33,14 +36,15 @@ import { environmentValidator } from './schema';
     StampsModule,
     AuthModule,
     FaqsModule,
+    GamesModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: AuthGuard,
-    // },
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
   ],
 })
 export class AppModule {}

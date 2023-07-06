@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { AuthService } from '@/auth/auth.service';
 import { UserLoginDto } from './users.dto';
-import { PublicRoute } from '@/auth/auth.decorator';
+import { AllRoles, PublicRoute } from '@/auth/auth.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -21,6 +21,7 @@ export class UsersController {
       });
   }
 
+  @AllRoles()
   @Get()
   async getUsers() {
     return await this.usersService.getUsers();

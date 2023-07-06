@@ -14,7 +14,7 @@ export class FaqsController {
 
   @AllowRoles(Roles.IT, Roles.Admin)
   @Patch('/:id')
-  updatePost(@Param('id') id: string, @Body() payload: any) {
+  async updateFaq(@Param('id') id: string, @Body() payload: any) {
     return this.faqsService.updateFaq(id, payload);
   }
 }

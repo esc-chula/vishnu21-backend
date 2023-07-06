@@ -1,7 +1,7 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { Faq } from '@prisma/client';
 import { PrismaService } from '@/prisma/prisma.service';
-import { FaqDTO } from './types/faq.dto';
+import { FaqUpdateDTO } from './types/faq-update.dto';
 
 @Injectable()
 export class FaqsService {
@@ -21,7 +21,7 @@ export class FaqsService {
     }
   }
 
-  async updateFaq(id: string, payload: FaqDTO): Promise<Faq> {
+  async updateFaq(id: string, payload: FaqUpdateDTO): Promise<Faq> {
     try {
       const faqInfo = this.prisma.faq.update({
         where: { faqId: id },

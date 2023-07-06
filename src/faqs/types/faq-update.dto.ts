@@ -1,6 +1,6 @@
 import { IsInt, IsOptional, IsString } from 'class-validator';
 
-export class FaqDTO {
+export class FaqUpdateDTO {
   @IsOptional()
   @IsString()
   event?: string;

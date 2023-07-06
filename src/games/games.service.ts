@@ -1,13 +1,15 @@
 import { PrismaService } from '@/prisma/prisma.service';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { Game } from '@prisma/client';
+import { GameDTO } from './games.dto';
 
 @Injectable()
 export class GamesService {
   constructor(private prisma: PrismaService) {}
 
-  getGames(expired: boolean) {
+  async getGames(expired: boolean) {
     if (expired) {
-      return this.prisma.game.findMany({
+      return await this.prisma.game.findMany({
         where: {
           expiresAt: {
             lte: new Date(),
@@ -15,7 +17,7 @@ export class GamesService {
         },
       });
     } else {
-      return this.prisma.game.findMany({
+      return await this.prisma.game.findMany({
         where: {
           expiresAt: {
             gt: new Date(),
@@ -23,5 +25,18 @@ export class GamesService {
         },
       });
     }
+
+  async createGame(payload: GameDTO): Promise<Game> {
+    const game = await this.prisma.game
+      .create({
+        data: {
+          ...payload,
+        },
+      })
+      .catch((error) => {
+        throw new BadRequestException(error.message);
+      });
+
+    return game;
   }
 }

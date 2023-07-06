@@ -18,6 +18,7 @@ export class FaqsController {
     return this.faqsService.updateFaq(id, payload);
   }
 
+  @AllowRoles(Roles.IT, Roles.Admin)
   @Post('/')
   async createFaq(@Body() payload: any) {
     return this.faqsService.createFaq(payload);

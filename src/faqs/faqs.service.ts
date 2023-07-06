@@ -2,6 +2,7 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { Faq } from '@prisma/client';
 import { PrismaService } from '@/prisma/prisma.service';
 import { FaqUpdateDTO } from './types/faq-update.dto';
+import { FaqCreateDTO } from './types/faq-create.dto';
 
 @Injectable()
 export class FaqsService {
@@ -25,6 +26,19 @@ export class FaqsService {
     try {
       const faqInfo = this.prisma.faq.update({
         where: { faqId: id },
+        data: {
+          ...payload,
+        },
+      });
+      return faqInfo;
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async createFaq(payload: FaqCreateDTO): Promise<Faq> {
+    try {
+      const faqInfo = this.prisma.faq.create({
         data: {
           ...payload,
         },

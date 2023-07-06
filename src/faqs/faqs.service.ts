@@ -10,9 +10,8 @@ export class FaqsService {
     try {
       const faqInfo: Faq[] = await this.prisma.faq.findMany({
         where: { event: event },
+        orderBy: [{ priority: 'desc' }],
       });
-
-      faqInfo.sort((a, b) => b.priority - a.priority);
 
       return faqInfo;
     } catch (error) {

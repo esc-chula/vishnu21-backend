@@ -1,13 +1,20 @@
-import { Body, Controller, Delete, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Delete, Param, Patch, Post, Query } from '@nestjs/common';
 import { Roles } from '@prisma/client';
 import { GamesService } from './games.service';
-import { AllowRoles, PublicRoute } from '@/auth/auth.decorator';
+import { AllRoles, AllowRoles } from '@/auth/auth.decorator';
 import { GameDTO, updateGameDTO } from './games.dto';
 
 @Controller('games')
 export class GamesController {
   constructor(private gamesService: GamesService) {}
 
+  @AllRoles()
+  @Get('/')
+  getGames(@Query() query: { expired?: boolean }) {
+    const { expired } = query;
+    return this.gamesService.getGames(expired);
+  }
+  
   @Post()
   @AllowRoles(Roles.Admin, Roles.IT, Roles.Activity)
   async createGame(@Body() body: GameDTO) {

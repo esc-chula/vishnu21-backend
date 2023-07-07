@@ -7,6 +7,26 @@ import { GameDTO, updateGameDTO } from './games.dto';
 export class GamesService {
   constructor(private prisma: PrismaService) {}
 
+  async getGames(expired: boolean) {
+    if (expired) {
+      return await this.prisma.game.findMany({
+        where: {
+          expiresAt: {
+            lte: new Date(),
+          },
+        },
+      });
+    } else {
+      return await this.prisma.game.findMany({
+        where: {
+          expiresAt: {
+            gt: new Date(),
+          },
+        },
+      });
+    }
+  }
+
   async createGame(payload: GameDTO): Promise<Game> {
     const game = await this.prisma.game
       .create({
@@ -38,7 +58,7 @@ export class GamesService {
         where: { gameId: id }
       })
       
-      return { message: 'Delete score history complete' };
+      return { message: 'Delete game complete' };
     } catch (error) {
       throw new BadRequestException(error.message);
     }

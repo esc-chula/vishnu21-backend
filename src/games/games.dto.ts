@@ -1,5 +1,5 @@
 import { GameType, ScoringMode } from '@prisma/client';
-import { IsBoolean, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsDate, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class GameDTO {
   @IsNotEmpty()
@@ -14,6 +14,8 @@ export class GameDTO {
   maxScore?: number;
   @IsOptional()
   isIndividual?: boolean;
+  @IsDate()
+  expiresAt:  Date;
 }
 
 export class updateGameDTO {
@@ -42,4 +44,8 @@ export class updateGameDTO {
   @IsOptional()
   @IsBoolean()
   isIndividual?: boolean;
+
+  @IsOptional()
+  @IsDate()
+  expiresAt?:  Date;
 }

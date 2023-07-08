@@ -40,3 +40,4 @@ lerna-debug.log*
 !.env.example
 
 *-lock.yaml
+package-lock.json

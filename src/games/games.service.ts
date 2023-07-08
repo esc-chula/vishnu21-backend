@@ -42,22 +42,22 @@ export class GamesService {
   }
 
   async updateGame(id: string, payload: updateGameDTO): Promise<Game> {
-    try{
+    try {
       return await this.prisma.game.update({
         where: { gameId: id },
-        data: { ...payload }
-      })
+        data: { ...payload },
+      });
     } catch (error) {
       throw new BadRequestException(error.message);
     }
   }
 
   async deleteGame(id: string) {
-    try{
+    try {
       await this.prisma.game.delete({
-        where: { gameId: id }
-      })
-      
+        where: { gameId: id },
+      });
+
       return { message: 'Delete game complete' };
     } catch (error) {
       throw new BadRequestException(error.message);

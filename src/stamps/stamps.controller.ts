@@ -14,7 +14,10 @@ export class StampsController {
 
   @PublicRoute()
   @Get()
-  async stampValidation(@Query('stampId') stampId: string, @Query('timestamp') timestamp: number) {
+  async stampValidation(
+    @Query('stampId') stampId: string,
+    @Query('timestamp') timestamp: number,
+  ) {
     return this.stampsService.stampValidation(stampId, timestamp);
   }
 }

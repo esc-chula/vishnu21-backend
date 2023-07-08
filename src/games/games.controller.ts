@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Delete, Param, Patch, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Delete,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { Roles } from '@prisma/client';
 import { GamesService } from './games.service';
 import { AllRoles, AllowRoles } from '@/auth/auth.decorator';
@@ -14,7 +23,7 @@ export class GamesController {
     const { expired } = query;
     return this.gamesService.getGames(expired);
   }
-  
+
   @Post()
   @AllowRoles(Roles.Admin, Roles.IT, Roles.Activity)
   async createGame(@Body() body: GameDTO) {

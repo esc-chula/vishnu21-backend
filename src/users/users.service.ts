@@ -6,8 +6,11 @@ import { PrismaService } from '@/prisma/prisma.service';
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async findOne(studentId: string) {
+  async findOneByStudentId(studentId: string) {
     return this.prisma.user.findUnique({ where: { studentId } });
+  }
+  async findOne(userId: string) {
+    return this.prisma.user.findFirst({ where: { userId } });
   }
 
   async getUsers(): Promise<{
@@ -54,5 +57,28 @@ export class UsersService {
     return roles.roles.some(
       (r) => includes.includes(r) && !denied?.includes(r),
     );
+  }
+
+  async assignSSOTicket(studentId: string, ticketToken: string) {
+    return await this.prisma.user.update({
+      where: { studentId },
+      data: { ticketToken },
+    });
+  }
+
+  async getUserProfile(userId: string) {
+    return await this.prisma.user.findUnique({
+      where: { userId },
+      select: {
+        userId: true,
+        studentId: true,
+        name: true,
+        status: true,
+        telNo: true,
+        lineProfile: true,
+        Group: true,
+        roles: true,
+      },
+    });
   }
 }

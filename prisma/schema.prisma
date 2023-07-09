@@ -30,6 +30,7 @@ model User {
   studentId   String     @unique
   telNo       String?
   lineProfile String?
+  ticketToken String?
   status      Status?
   roles       Roles[]    @default([User])
   Group       Group?     @relation(fields: [groupId], references: [groupId])

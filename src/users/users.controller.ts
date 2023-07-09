@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { AuthService } from '@/auth/auth.service';
 import { UserLoginDto } from './users.dto';
@@ -25,5 +25,11 @@ export class UsersController {
   @Get()
   async getUsers() {
     return await this.usersService.getUsers();
+  }
+
+  @AllRoles()
+  @Get('profile')
+  async getUserProfile(@Req() req: any) {
+    return await this.usersService.getUserProfile(req.user.userId);
   }
 }

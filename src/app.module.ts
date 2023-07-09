@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { PrismaModule } from './prisma/prisma.module';
 import { GroupsModule } from './groups/groups.module';
 import { ScoresModule } from './scores/scores.module';
+import { FaqsModule } from './faqs/faqs.module';
 import { PostsModule } from './posts/posts.module';
 import { StampsModule } from './stamps/stamps.module';
 import { CommentsModule } from './comments/comments.module';
@@ -34,6 +35,7 @@ import { GamesModule } from './games/games.module';
     UsersModule,
     StampsModule,
     AuthModule,
+    FaqsModule,
     GamesModule,
   ],
   controllers: [AppController],

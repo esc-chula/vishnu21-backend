@@ -14,7 +14,7 @@ import { ConfigModule } from '@nestjs/config';
 import { environmentValidator } from './schema';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
-import { GameModule } from './games/games.module';
+import { GamesModule } from './games/games.module';
 
 @Module({
   imports: [

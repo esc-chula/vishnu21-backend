@@ -35,6 +35,7 @@ import { AuthGuard } from './auth/auth.guard';
     StampsModule,
     AuthModule,
     FaqsModule,
+    GamesModule,
   ],
   controllers: [AppController],
   providers: [

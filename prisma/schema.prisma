@@ -35,9 +35,12 @@ model User {
   roles       Roles[]    @default([User])
   Group       Group?     @relation(fields: [groupId], references: [groupId])
   groupId     String?    @db.ObjectId
+
   Post        Post[]
   GamePlay    GamePlay[]
   Comment     Comment[]
+  stampCount  Int       @default(0)
+  stampCollected  Json[]
 }
 
 type Contacts {

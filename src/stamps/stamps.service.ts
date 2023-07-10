@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
 import { v4 as uuidv4 } from 'uuid';
 import * as qrcode from 'qrcode';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class StampsService {
@@ -27,6 +28,26 @@ export class StampsService {
     }
 
     return { qrCode: qrCode };
+  }
+
+  async stampSubmission(
+    userId: string,
+    stampCount: number,
+    stampCollected: Prisma.JsonValue[],
+  ): Promise<{ isSuccess: boolean }> {
+    let isSuccess = false;
+    try {
+      await this.prisma.user.update({
+        where: {
+          userId: userId,
+        },
+        data: { stampCount: stampCount, stampCollected: stampCollected },
+      });
+      isSuccess = true;
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+    return { isSuccess: isSuccess };
   }
 
   async stampValidation(

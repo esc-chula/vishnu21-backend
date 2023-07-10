@@ -1,5 +1,6 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Put, Body, Req, Query } from '@nestjs/common';
 import { StampsService } from './stamps.service';
+import { Prisma } from '@prisma/client';
 import { PublicRoute } from '@/auth/auth.decorator';
 
 @Controller('users/stamp')
@@ -10,6 +11,15 @@ export class StampsController {
   @Get('/:slug')
   async generateStamp(@Param('slug') slug: string) {
     return this.stampsService.generateStamp(slug);
+  }
+
+  @Put()
+  async stampSubmission(
+    @Req() req: any,
+    @Body('stampCount') stampCount: number,
+    @Body('stampCollected') stampCollected: Prisma.JsonValue[],
+  ) {
+    return this.stampSubmission(req.user.userId, stampCount, stampCollected);
   }
 
   @PublicRoute()

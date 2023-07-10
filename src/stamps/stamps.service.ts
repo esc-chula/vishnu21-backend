@@ -18,6 +18,7 @@ export class StampsService {
         },
         data: {
           stampId: newStampId,
+          timestamp: Date.now(),
         },
       });
 
@@ -47,5 +48,28 @@ export class StampsService {
       throw new BadRequestException(error.message);
     }
     return { isSuccess: isSuccess };
+  }
+
+  async stampValidation(
+    stampId: string,
+    timestamp: number,
+  ): Promise<{ isValid: boolean }> {
+    let isValid = false;
+    try {
+      await this.prisma.stamp
+        .findUnique({
+          where: {
+            stampId,
+          },
+        })
+        .then((stamp) => {
+          const millis = timestamp - stamp.timestamp;
+          if (stamp && Math.floor(millis / 1000) <= 300) isValid = true;
+        });
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+
+    return { isValid: isValid };
   }
 }

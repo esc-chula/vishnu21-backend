@@ -30,6 +30,7 @@ model User {
   studentId   String     @unique
   telNo       String?
   lineProfile String?
+  ticketToken String?
   status      Status?
   roles       Roles[]    @default([User])
   Group       Group?     @relation(fields: [groupId], references: [groupId])
@@ -104,6 +105,7 @@ model Game {
   maxScore       Int?
   isIndividual   Boolean?    @default(false)
   createdAt      DateTime    @default(now())
+  expiresAt      DateTime
   GamePlay       GamePlay[]
 }
 
@@ -148,4 +150,12 @@ model Stamp {
   stampName String @unique
   slug      String @unique
   timestamp Int
+}
+
+model Faq {
+  faqId    String @id @default(auto()) @map("_id") @db.ObjectId
+  event    String
+  question String
+  answer   String
+  priority Int?   @default(0)
 }

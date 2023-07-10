@@ -1,0 +1,22 @@
+import { Controller, Get, Param, Body, Patch } from '@nestjs/common';
+import { FaqsService } from './faqs.service';
+import { AllowRoles } from '@/auth/auth.decorator';
+import { Roles } from '@prisma/client';
+import { Controller, Get, Param } from '@nestjs/common';
+import { FaqsService } from './faqs.service';
+
+@Controller('faq')
+export class FaqsController {
+  constructor(private faqsService: FaqsService) {}
+
+  @Get('/:event')
+  async getFaqByEvent(@Param('event') event: string) {
+    return await this.faqsService.getFaqByEvent(event);
+  }
+
+  @AllowRoles(Roles.IT, Roles.Admin)
+  @Patch('/:id')
+  async updateFaq(@Param('id') id: string, @Body() payload: any) {
+    return this.faqsService.updateFaq(id, payload);
+  }
+}

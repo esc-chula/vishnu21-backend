@@ -41,7 +41,7 @@ export class StampsService {
         where: {
           userId: userId,
         },
-        data: { stampCount: stampCount, stampCollected: stampCollected },
+        data: { stampCount, stampCollected: stampCollected },
       });
       isSuccess = true;
     } catch (error) {

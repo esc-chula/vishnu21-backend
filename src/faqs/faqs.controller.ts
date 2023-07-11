@@ -2,8 +2,6 @@ import { Controller, Get, Param, Body, Patch } from '@nestjs/common';
 import { FaqsService } from './faqs.service';
 import { AllowRoles } from '@/auth/auth.decorator';
 import { Roles } from '@prisma/client';
-import { Controller, Get, Param } from '@nestjs/common';
-import { FaqsService } from './faqs.service';
 
 @Controller('faq')
 export class FaqsController {

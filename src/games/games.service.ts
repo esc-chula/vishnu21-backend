@@ -63,4 +63,54 @@ export class GamesService {
       throw new BadRequestException(error.message);
     }
   }
+
+  async verifyChoice(
+    gameId: string,
+    choice: string,
+  ): Promise<{ success: boolean; correct: boolean }> {
+    try {
+      const game = await this.prisma.game.findUnique({
+        where: { gameId },
+      });
+
+      if (!game) {
+        throw new BadRequestException('Game not found');
+      }
+
+      // TODO: add logic to verify choice
+      const correct = game.correctAnswer === choice;
+
+      return { success: true, correct };
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async addScoreToGame(gameId: string, choice: string) {
+    try {
+      const game = await this.prisma.game.findUnique({
+        where: { gameId },
+      });
+
+      if (!game) {
+        throw new BadRequestException('Game not found');
+      }
+
+      // TODO: Add choice to the game and transform choice to the correct payload type
+      const payload = { choice };
+      const gamePlay = await this.prisma.gamePlay
+        .create({
+          data: {
+            ...payload,
+          },
+        })
+        .catch((error) => {
+          throw new BadRequestException(error.message);
+        });
+
+      return gamePlay;
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
 }

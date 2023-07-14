@@ -9,8 +9,11 @@ export class StampsController {
 
   @PublicRoute()
   @Get('/:slug')
-  async generateStamp(@Param('slug') slug: string) {
-    return this.stampsService.generateStamp(slug);
+  async generateStamp(
+    @Param('slug') slug: string,
+    @Query('stampName') stampName: string,
+  ) {
+    return this.stampsService.generateStamp(slug, stampName || 'Unknown Stamp');
   }
 
   @Put()

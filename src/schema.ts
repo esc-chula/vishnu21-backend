@@ -10,4 +10,5 @@ export const environmentValidator = Joi.object({
   JWT_TIME: Joi.string().default('7d'),
   DEEAPP_ID: Joi.string().required(),
   DEEAPP_SECRET: Joi.string().required(),
+  LINE_CHANNEL_ACCESS_TOKEN: Joi.string().required(),
 });

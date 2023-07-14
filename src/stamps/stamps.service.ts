@@ -8,15 +8,24 @@ import { Prisma } from '@prisma/client';
 export class StampsService {
   constructor(private prisma: PrismaService) {}
 
-  async generateStamp(slug: string): Promise<{ qrCode: string }> {
+  async generateStamp(
+    slug: string,
+    stampName: string,
+  ): Promise<{ qrCode: string }> {
     const newStampId = uuidv4();
     let qrCode: string;
     try {
-      await this.prisma.stamp.update({
+      await this.prisma.stamp.upsert({
         where: {
           slug,
         },
-        data: {
+        create: {
+          slug,
+          stampName,
+          stampId: newStampId,
+          timestamp: Date.now(),
+        },
+        update: {
           stampId: newStampId,
           timestamp: Date.now(),
         },
@@ -41,7 +50,7 @@ export class StampsService {
         where: {
           userId: userId,
         },
-        data: { stampCount: stampCount, stampCollected: stampCollected },
+        data: { stampCount, stampCollected: stampCollected },
       });
       isSuccess = true;
     } catch (error) {

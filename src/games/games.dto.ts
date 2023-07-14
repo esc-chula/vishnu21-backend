@@ -1,4 +1,4 @@
-import { GameType, ScoringMode } from '@prisma/client';
+import { ScoringMode } from '@prisma/client';
 import {
   IsBoolean,
   IsDate,
@@ -10,9 +10,15 @@ import {
 
 export class GameDTO {
   @IsNotEmpty()
-  name: string;
+  title: string;
   @IsOptional()
   description?: string;
+  @IsNotEmpty()
+  choices: { choiceId: string; text: string }[];
+  @IsNotEmpty()
+  hint: string;
+  @IsOptional()
+  scoring?: ScoringMode;
   @IsOptional()
   @IsInt()
   maxParticipant?: number;
@@ -28,14 +34,17 @@ export class GameDTO {
 export class updateGameDTO {
   @IsOptional()
   @IsString()
-  name?: string;
+  title?: string;
 
   @IsOptional()
   @IsString()
   description?: string;
 
-  @IsOptional()
-  type?: GameType;
+  @IsNotEmpty()
+  choices: { choiceId: string; text: string }[];
+
+  @IsNotEmpty()
+  hint: string;
 
   @IsOptional()
   scoring?: ScoringMode;

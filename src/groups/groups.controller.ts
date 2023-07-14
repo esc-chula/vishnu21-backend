@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Req } from '@nestjs/common';
 import { GroupsService } from './groups.service';
 import { EmergencyDTO } from './types/emergency.dto';
 
@@ -9,9 +9,10 @@ export class GroupsController {
   async getGroupsInfo() {
     return await this.groupsService.getGroupsInfo();
   }
-  @Get('/:groupId')
-  async getGroupInfoById(@Param('groupId') groupId: string) {
-    return await this.groupsService.getGroupInfoById(groupId);
+
+  @Get('/user')
+  async getGroupInfoById(@Req() req: any) {
+    return await this.groupsService.getGroupInfoById(req.user.group);
   }
 
   @Get('/emergency/:groupId')

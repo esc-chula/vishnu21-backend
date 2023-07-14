@@ -15,18 +15,34 @@ enum Status {
   Unknown
 }
 
+enum Roles {
+  User
+  Admin
+  Activity
+  Board
+  IT
+  HeadHouse
+}
+
 model User {
-  userId      String     @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  studentId   String     @unique
-  telNo       String?
-  lineProfile String?
-  status      Status?
-  Group       Group?     @relation(fields: [groupId], references: [groupId])
-  groupId     String?    @db.ObjectId
-  Post        Post[]
-  GamePlay    GamePlay[]
-  Comment     Comment[]
+  userId         String     @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  studentId      String     @unique
+  telNo          String?
+  instagram      String?
+  profilePicture String?
+  lineUsername   String?
+  lineUserId     String?
+  ticketToken    String?
+  status         Status?
+  roles          Roles[]    @default([User])
+  Group          Group?     @relation(fields: [groupId], references: [groupId])
+  groupId        String?    @db.ObjectId
+  Post           Post[]
+  GamePlay       GamePlay[]
+  Comment        Comment[]
+  stampCount     Int        @default(0)
+  stampCollected Json[]
 }
 
 type Contacts {
@@ -83,21 +99,22 @@ model Comment {
 
 model Game {
   gameId         String      @id @default(auto()) @map("_id") @db.ObjectId
-  name           String
+  title          String
   description    String?
-  type           GameType    @default(Choice)
+  choices        Choice[]
+  hint           String
   scoring        ScoringMode @default(Equal)
   maxParticipant Int?
   maxScore       Int?
   isIndividual   Boolean?    @default(false)
   createdAt      DateTime    @default(now())
+  expiresAt      DateTime
   GamePlay       GamePlay[]
 }
 
-enum GameType {
-  Choice
-  Text
-  File
+type Choice {
+  choiceId String
+  text     String
 }
 
 enum ScoringMode {
@@ -130,9 +147,17 @@ model ScoreHistory {
 }
 
 model Stamp {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  stampId   String   @unique
-  stampName String   @unique
-  slug      String   @unique
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  stampId   String @unique
+  stampName String
+  slug      String @unique
   timestamp Int
+}
+
+model Faq {
+  faqId    String @id @default(auto()) @map("_id") @db.ObjectId
+  event    String
+  question String
+  answer   String
+  priority Int?   @default(0)
 }

@@ -30,7 +30,7 @@ export class ScoresController {
   ): Promise<{ scoreId: string; createdAt: Date }> {
     return await this.scoresService.createScoreHistory(scoresHistoryDTO);
   }
-  
+
   @Patch('/:id')
   updateScores(@Param('id') id: string, @Body() payload: ScoresHistoryDTO) {
     return this.scoresService.updateScores(id, payload);

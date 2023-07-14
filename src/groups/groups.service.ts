@@ -1,6 +1,6 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
-import { ContactsPayload, Group } from '@prisma/client';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { Contacts, Group } from '@prisma/client';
+import { PrismaService } from '@/prisma/prisma.service';
 import { EmergencyDTO } from './types/emergency.dto';
 
 @Injectable()
@@ -28,9 +28,8 @@ export class GroupsService {
       throw new BadRequestException(error.message);
     }
   }
-  async getEmergency(
-    groupId: string,
-  ): Promise<{ contacts: ContactsPayload[] }> {
+
+  async getEmergency(groupId: string): Promise<{ contacts: Contacts[] }> {
     try {
       const emergency = await this.prisma.group.findUnique({
         where: { groupId },
@@ -41,6 +40,7 @@ export class GroupsService {
       throw new BadRequestException(error.message);
     }
   }
+
   async updateEmergency(
     groupId: string,
     contacts: EmergencyDTO[],

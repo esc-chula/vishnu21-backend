@@ -1,14 +1,14 @@
 import { Controller, Get, Param, Body, Patch } from '@nestjs/common';
 import { FaqsService } from './faqs.service';
-import { AllowRoles } from '@/auth/auth.decorator';
+import { AllRoles, AllowRoles, PublicRoute } from '@/auth/auth.decorator';
 import { Roles } from '@prisma/client';
-import { Controller, Get, Param } from '@nestjs/common';
-import { FaqsService } from './faqs.service';
 
-@Controller('faq')
+@Controller('faqs')
 export class FaqsController {
   constructor(private faqsService: FaqsService) {}
 
+  @AllRoles()
+  @PublicRoute()
   @Get('/:event')
   async getFaqByEvent(@Param('event') event: string) {
     return await this.faqsService.getFaqByEvent(event);

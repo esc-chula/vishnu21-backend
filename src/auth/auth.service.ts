@@ -58,13 +58,7 @@ export class AuthService {
     this.logger.debug(JSON.stringify(user));
     if (returnModel) return user;
     return this.jwtService.sign(
-      {
-        userId: user.userId,
-        studentId: user.studentId,
-        name: user.name,
-        profile: user.lineProfile,
-        group: user.groupId,
-      },
+      await this.usersService.getUserProfile(user.userId),
       {
         issuer: 'vishnu21st-it',
         mutatePayload: true,

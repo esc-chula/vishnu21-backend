@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Post, Req } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { AuthService } from '@/auth/auth.service';
-import { UserLoginDto } from './users.dto';
-import { AllRoles, PublicRoute } from '@/auth/auth.decorator';
+import { UserContactUpdateDto, UserLoginDto } from './users.dto';
+import { AllRoles, AllowRoles, PublicRoute } from '@/auth/auth.decorator';
+import { Roles, User } from '@prisma/client';
 
 @Controller('users')
 export class UsersController {
@@ -31,5 +32,22 @@ export class UsersController {
   @Get('profile')
   async getUserProfile(@Req() req: any) {
     return await this.usersService.getUserProfile(req.user.userId);
+  }
+
+  @AllowRoles(Roles.Admin, Roles.IT, Roles.Board, Roles.HeadHouse)
+  @Patch('profile')
+  async updateUserProfile(@Req() req: any, @Body() body: User) {
+    return await this.usersService.updateUserProfile(req.user.userId, body);
+  }
+
+  @Patch('profile/contact')
+  async updateUserProfileContact(
+    @Req() req: any,
+    @Body() body: UserContactUpdateDto,
+  ) {
+    return await this.usersService.updateUserProfileContact(
+      req.user.userId,
+      body,
+    );
   }
 }

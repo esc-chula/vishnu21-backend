@@ -41,4 +41,24 @@ export class GamesController {
   async deleteGame(@Param('id') id: string) {
     return await this.gamesService.deleteGame(id);
   }
+
+  @Post('/:id/submit')
+  @AllowRoles(Roles.User)
+  async submitGame(
+    @Param('id') gameId: string,
+    @Body() body: { choice: string },
+  ) {
+    const { choice } = body;
+
+    const { success, correct } = await this.gamesService.verifyChoice(
+      gameId,
+      choice,
+    );
+
+    if (correct) {
+      await this.gamesService.addScoreToGame(gameId, choice);
+    }
+
+    return { success, correct };
+  }
 }

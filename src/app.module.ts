@@ -29,6 +29,8 @@ import { GamesModule } from './games/games.module';
     }),
     PrismaModule,
     GroupsModule,
+    AuthModule,
+    UserModule,
     ScoresModule,
     PostsModule,
     CommentsModule,

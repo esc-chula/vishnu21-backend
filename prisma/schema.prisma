@@ -99,9 +99,10 @@ model Comment {
 
 model Game {
   gameId         String      @id @default(auto()) @map("_id") @db.ObjectId
-  name           String
+  title          String
   description    String?
-  type           GameType    @default(Choice)
+  choices        Choice[]
+  hint           String
   scoring        ScoringMode @default(Equal)
   maxParticipant Int?
   maxScore       Int?
@@ -111,10 +112,9 @@ model Game {
   GamePlay       GamePlay[]
 }
 
-enum GameType {
-  Choice
-  Text
-  File
+type Choice {
+  choiceId String
+  text     String
 }
 
 enum ScoringMode {

@@ -19,9 +19,8 @@ export class GamesController {
 
   @AllRoles()
   @Get('/')
-  getGames(@Query() query: { expired?: boolean }) {
-    const { expired } = query;
-    return this.gamesService.getGames(expired);
+  getGames(@Query('expired') expired: string) {
+    return this.gamesService.getGames(expired === 'true');
   }
 
   @Post()

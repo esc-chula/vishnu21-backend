@@ -1,8 +1,9 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
-import { Roles } from '@prisma/client';
+import { Roles, User } from '@prisma/client';
 import { PrismaService } from '@/prisma/prisma.service';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
+import { URLSearchParams } from 'url';
 
 @Injectable()
 export class UsersService {
@@ -76,7 +77,7 @@ export class UsersService {
     });
   }
 
-  async updateUserProfile(userId: string, body: any) {
+  async updateUserProfile(userId: string, body: Partial<User>) {
     return await this.prisma.user.update({
       where: { userId },
       data: body,
@@ -95,29 +96,40 @@ export class UsersService {
       .findUnique({
         where: { userId },
       })
-      .then(async (user) => {
-        if (this.configService.get('LINE_CHANNEL_ACCESS_TOKEN'))
-          return await this.httpService.axiosRef
-            .get(`https://api.line.me/v2/bot/profile/${user.lineUserId}`, {
-              headers: {
-                Authorization: `Bearer ${this.configService.get(
-                  'LINE_CHANNEL_ACCESS_TOKEN',
-                )}`,
-              },
-            })
-            .then(async (res) => {
-              user.lineUsername = res.data.displayName;
-              user.profilePicture = res.data.pictureUrl;
-              await this.updateUserProfile(user.userId, {
-                lineUsername: res.data.displayName,
-                profilePicture: res.data.pictureUrl,
-              });
-              return user;
-            })
-            .catch((e) => {
-              this.logger.error(e);
-              return user;
-            });
+      .then((user) => {
+        this.getLineProfile(userId);
+        return user;
+      });
+  }
+
+  async getLineProfile(userId: string) {
+    const user = await this.findOne(userId);
+    if (!user || !user.lineIdToken) return null;
+    return await this.httpService.axiosRef
+      .post(
+        `https://api.line.me/oauth2/v2.1/verify`,
+        new URLSearchParams({
+          id_token: user.lineIdToken,
+          client_id: this.configService.get('LINE_CHANNEL_CLIENT_ID'),
+        }),
+        {
+          headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        },
+      )
+      .then((res) => {
+        return this.updateUserProfile(userId, {
+          lineUsername: res.data.name,
+          lineUserId: res.data.sub,
+          profilePicture: res.data.picture,
+        }).then((user) => {
+          const { lineUsername, lineUserId, profilePicture } = user;
+          return { username: lineUsername, userId: lineUserId, profilePicture };
+        });
+      })
+      .catch((err) => {
+        this.logger.error(err);
+        console.error(err);
+        throw err;
       });
   }
 }

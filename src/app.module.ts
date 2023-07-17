@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { PrismaModule } from './prisma/prisma.module';
 import { GroupsModule } from './groups/groups.module';
 import { ScoresModule } from './scores/scores.module';
@@ -15,11 +15,13 @@ import { environmentValidator } from './schema';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
 import { GamesModule } from './games/games.module';
+import { AppLoggerMiddleware } from './app.middleware';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      ignoreEnvFile: process.env.NODE_ENV === 'production',
+      ignoreEnvFile:
+        (process.env.NODE_ENV || '').toLowerCase() === 'production',
       isGlobal: true,
       validationSchema: environmentValidator,
       validationOptions: {
@@ -47,4 +49,8 @@ import { GamesModule } from './games/games.module';
     },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(AppLoggerMiddleware).forRoutes('*');
+  }
+}

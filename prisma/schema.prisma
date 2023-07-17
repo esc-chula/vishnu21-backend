@@ -27,10 +27,12 @@ enum Roles {
 model User {
   userId         String     @id @default(auto()) @map("_id") @db.ObjectId
   name           String
+  nickname       String?
   studentId      String     @unique
   telNo          String?
   instagram      String?
   profilePicture String?
+  lineIdToken    String?
   lineUsername   String?
   lineUserId     String?
   ticketToken    String?

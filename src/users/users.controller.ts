@@ -16,10 +16,8 @@ export class UsersController {
   @Post('login')
   async userLogin(@Body() loginDto: UserLoginDto) {
     return await this.authService
-      .signIn(loginDto.studentId, loginDto.password)
-      .then((userToken) => {
-        return { token: userToken };
-      });
+      .signIn(loginDto.studentId, loginDto.password, loginDto.lineToken)
+      .then((userToken) => ({ token: userToken }));
   }
 
   @AllRoles()
@@ -49,5 +47,10 @@ export class UsersController {
       req.user.userId,
       body,
     );
+  }
+
+  @Get('profile/line')
+  async getLineProfile(@Req() req: any) {
+    return await this.usersService.getLineProfile(req.user.userId);
   }
 }

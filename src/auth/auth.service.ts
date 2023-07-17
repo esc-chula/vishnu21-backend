@@ -77,8 +77,8 @@ export class AuthService {
         this.httpService
           .get('https://account.it.chula.ac.th/serviceValidation', {
             headers: {
-              DeeAppId: this.configService.get('DEEAPP_ID'),
-              DeeAppSecret: this.configService.get('DEEAPP_SECRET'),
+              DeeAppId: this.configService.get('DEEPAPP_ID'),
+              DeeAppSecret: this.configService.get('DEEPAPP_SECRET'),
               DeeTicket: user.ticketToken,
             },
           })

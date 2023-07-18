@@ -8,7 +8,7 @@ async function bootstrap() {
     cors: { origin: process.env.ALLOW_ORIGIN || '*' },
   });
   app.useLogger(logger);
-  await app.enableShutdownHooks();
+  app.enableShutdownHooks();
   await app.listen(4000);
 }
 bootstrap();

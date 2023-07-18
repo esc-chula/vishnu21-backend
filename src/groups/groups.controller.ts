@@ -1,10 +1,12 @@
 import { Body, Controller, Get, Param, Patch, Req } from '@nestjs/common';
 import { GroupsService } from './groups.service';
 import { EmergencyDTO } from './types/emergency.dto';
+import { AllowRoles, DenyRoles } from '@/auth/auth.decorator';
 
 @Controller('groups')
 export class GroupsController {
   constructor(private groupsService: GroupsService) {}
+
   @Get()
   async getGroupsInfo() {
     return await this.groupsService.getGroupsInfo();
@@ -13,6 +15,18 @@ export class GroupsController {
   @Get('/user')
   async getGroupInfoById(@Req() req: any) {
     return await this.groupsService.getGroupInfoById(req.user.groupId);
+  }
+
+  @Get(':id')
+  @DenyRoles('User', 'Stamp', 'CoreTeam')
+  async getGroupInfo(@Param('id') id: any) {
+    return await this.groupsService.getGroupInfoById(id);
+  }
+
+  @AllowRoles('HeadHouse', 'COOP', 'Admin')
+  @Patch('line')
+  async addLineGroup(@Req() req: any, @Body('lineGroup') lineGroup: string) {
+    return await this.groupsService.addLineGroup(req.user.groupId, lineGroup);
   }
 
   @Get('/emergency/:groupId')

@@ -61,12 +61,9 @@ export class RolesGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const isAll = this.reflector.get<boolean>('allRoles', context.getHandler());
     if (isAll) return true;
-    const deny = this.reflector.get<Roles[]>(
-      'allowRoles',
-      context.getHandler(),
-    );
+    const deny = this.reflector.get<Roles[]>('denyRoles', context.getHandler());
     const allow = this.reflector.get<Roles[]>(
-      'denyRoles',
+      'allowRoles',
       context.getHandler(),
     );
 
@@ -76,6 +73,6 @@ export class RolesGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest();
     const user = request.user;
-    return await this.userService.validateUserRole(user, allow, deny);
+    return await this.userService.validateUserRole(user.userId, allow, deny);
   }
 }

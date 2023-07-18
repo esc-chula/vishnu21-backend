@@ -32,7 +32,7 @@ model User {
   telNo          String?
   instagram      String?
   profilePicture String?
-  lineIdToken    String?
+  lineAccessToken    String?
   lineUsername   String?
   lineUserId     String?
   ticketToken    String?

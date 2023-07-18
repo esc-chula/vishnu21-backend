@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
-import { Roles, User } from '@prisma/client';
+import { Prisma, Roles } from '@prisma/client';
 import { PrismaService } from '@/prisma/prisma.service';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
@@ -77,7 +77,7 @@ export class UsersService {
     });
   }
 
-  async updateUserProfile(userId: string, body: Partial<User>) {
+  async updateUserProfile(userId: string, body: Prisma.UserUpdateInput) {
     return await this.prisma.user.update({
       where: { userId },
       data: body,
@@ -104,32 +104,71 @@ export class UsersService {
 
   async getLineProfile(userId: string) {
     const user = await this.findOne(userId);
-    if (!user || !user.lineIdToken) return null;
+    if (!(user && user.lineAccessToken)) return null;
     return await this.httpService.axiosRef
-      .post(
-        `https://api.line.me/oauth2/v2.1/verify`,
-        new URLSearchParams({
-          id_token: user.lineIdToken,
-          client_id: this.configService.get('LINE_CHANNEL_CLIENT_ID'),
-        }),
-        {
-          headers: { 'content-type': 'application/x-www-form-urlencoded' },
-        },
+      .get(
+        `https://api.line.me/oauth2/v2.1/verify?access_token=${user.lineAccessToken}`,
       )
-      .then((res) => {
-        return this.updateUserProfile(userId, {
-          lineUsername: res.data.name,
-          lineUserId: res.data.sub,
-          profilePicture: res.data.picture,
-        }).then((user) => {
-          const { lineUsername, lineUserId, profilePicture } = user;
-          return { username: lineUsername, userId: lineUserId, profilePicture };
-        });
+      .then(async () => {
+        return await this.httpService.axiosRef
+          .get('https://api.line.me/v2/profile', {
+            headers: { Authorization: `Bearer ${user.lineAccessToken}` },
+          })
+          .then(async (res) => {
+            return this.updateUserProfile(userId, {
+              lineUsername: res.data.displayName,
+              lineUserId: res.data.userId,
+              profilePicture: res.data.pictureUrl,
+            }).then((user) => {
+              const { lineUsername, lineUserId, profilePicture } = user;
+              return {
+                username: lineUsername,
+                userId: lineUserId,
+                profilePicture,
+              };
+            });
+          });
       })
       .catch((err) => {
-        this.logger.error(err);
-        console.error(err);
-        throw err;
+        this.logger.error(`[getLineProfile] ${err}`);
+        if (err.response) {
+          this.logger.error(
+            `[getLineProfile] ${JSON.stringify(err.response.data)}`,
+          );
+          if (this.refreshLineToken(userId)) return this.getLineProfile(userId);
+          throw new BadRequestException('Invalid Line Access Token');
+        }
+      });
+  }
+
+  async refreshLineToken(userId: string) {
+    const user = await this.findOne(userId);
+    if (!(user && user.lineAccessToken)) return null;
+    return await this.httpService.axiosRef
+      .post(
+        'https://api.line.me/oauth2/v2.1/token',
+        new URLSearchParams({
+          grant_type: 'refresh_token',
+          client_id: this.configService.get('LINE_CHANNEL_ID'),
+          client_secret: this.configService.get('LINE_CHANNEL_SECRET'),
+          refresh_token: user.lineAccessToken,
+        }),
+      )
+      .then(async (res) => {
+        this.updateUserProfile(userId, {
+          lineAccessToken: res.data.access_token,
+        });
+        return true;
+      })
+      .catch((err) => {
+        this.logger.error(`[refreshLineToken] ${err}`);
+        if (err.response) {
+          this.logger.error(
+            `[refreshLineToken] ${JSON.stringify(err.response.data)}`,
+          );
+          this.updateUserProfile(userId, { lineAccessToken: null });
+        }
+        return false;
       });
   }
 }

@@ -149,8 +149,8 @@ export class UsersService {
         'https://api.line.me/oauth2/v2.1/token',
         new URLSearchParams({
           grant_type: 'refresh_token',
-          client_id: this.configService.get('LINE_CHANNEL_ID'),
-          client_secret: this.configService.get('LINE_CHANNEL_SECRET'),
+          client_id: this.configService.get('LINE_CHANNEL_CLIENT_ID'),
+          client_secret: this.configService.get('LINE_CHANNEL_ACCESS_TOKEN'),
           refresh_token: user.lineAccessToken,
         }),
       )

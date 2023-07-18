@@ -15,22 +15,21 @@ export class StampsService {
         objective: true,
         previousActivity: true,
         headquarter: true,
-        slug: true,
+        slugName: true,
         tag: true,
         logo: true,
         id: true,
-        details: true,
       },
     });
   }
 
-  async generateStamp(slug: string): Promise<{ qrCode: string }> {
+  async generateStamp(slugName: string): Promise<{ qrCode: string }> {
     const newStampId = uuidv4();
     let qrCode: string;
     try {
       await this.prisma.stamp.update({
         where: {
-          slug,
+          slugName,
         },
         data: {
           stampId: newStampId,
@@ -66,14 +65,14 @@ export class StampsService {
     return { isSuccess: isSuccess };
   }
 
-  async stampValidation(slug: string, stampId: string, timestamp: number) {
+  async stampValidation(slugName: string, stampId: string, timestamp: number) {
     let isValid = false;
     try {
       await this.prisma.stamp
         .findUnique({
           where: {
             stampId,
-            slug,
+            slugName,
           },
         })
         .then((stamp) => {

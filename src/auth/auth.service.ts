@@ -79,6 +79,10 @@ export class AuthService {
     return this.jwtService.decode(token);
   }
 
+  async getUserProfile(userId: string) {
+    return await this.usersService.getUserProfile(userId);
+  }
+
   async validateUser(userId: string) {
     return await this.usersService.findOne(userId).then(async (user) => {
       return await firstValueFrom(

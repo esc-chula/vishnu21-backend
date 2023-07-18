@@ -61,11 +61,11 @@ export class UsersService {
     });
   }
 
-  async validateUserRole(userId: string, includes: Roles[], denied?: Roles[]) {
+  async validateUserRole(userId: string, includes?: Roles[], denied?: Roles[]) {
     const roles = await this.getUserRoles(userId);
     return (
-      roles.roles.every((r) => !denied?.includes(r)) &&
-      roles.roles.some((r) => includes.includes(r))
+      (denied || []).every((r) => !roles.roles.includes(r)) &&
+      (!includes ? true : (includes || []).some((r) => roles.roles.includes(r)))
     );
   }
 

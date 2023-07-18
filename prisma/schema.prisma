@@ -17,6 +17,10 @@ enum Status {
 
 enum Roles {
   User
+  Registration
+  Plan
+  CoreTeam
+  COOP
   Admin
   Activity
   Board
@@ -59,13 +63,14 @@ model Group {
   houseName    String
   shortName    String
   group        String
+  lineGroup    String?
   description  String?
   score        Int?           @default(0)
   contacts     Contacts[]
   members      User[]
   posts        Post[]
   ScoreHistory ScoreHistory[]
-  updatedAt    DateTime?       @default(now())
+  updatedAt    DateTime?      @default(now())
 }
 
 model Post {
@@ -159,16 +164,16 @@ enum StampTag {
 }
 
 model Stamp {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  stampId   String   @unique
-  clubName  String
-  tag       StampTag
-  objective String   @default("")
-  previousActivity  String   @default("")
-  headquarter       String   @default("")
-  logo      String?
-  slugName      String   @unique
-  timestamp Int
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  stampId          String   @unique
+  clubName         String
+  tag              StampTag
+  objective        String   @default("")
+  previousActivity String   @default("")
+  headquarter      String   @default("")
+  logo             String?
+  slugName         String   @unique
+  timestamp        Int
 }
 
 model Faq {

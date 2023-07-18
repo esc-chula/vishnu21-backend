@@ -63,7 +63,6 @@ export class UsersService {
 
   async validateUserRole(userId: string, includes: Roles[], denied?: Roles[]) {
     const roles = await this.getUserRoles(userId);
-    console.log(roles);
     return (
       roles.roles.every((r) => !denied?.includes(r)) &&
       roles.roles.some((r) => includes.includes(r))

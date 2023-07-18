@@ -8,24 +8,30 @@ import { Prisma } from '@prisma/client';
 export class StampsService {
   constructor(private prisma: PrismaService) {}
 
-  async generateStamp(
-    slug: string,
-    stampName: string,
-  ): Promise<{ qrCode: string }> {
+  async getAllClubs() {
+    return await this.prisma.stamp.findMany({
+      select: {
+        clubName: true,
+        objective: true,
+        previousActivity: true,
+        headquarter: true,
+        slugName: true,
+        tag: true,
+        logo: true,
+        id: true,
+      },
+    });
+  }
+
+  async generateStamp(slugName: string): Promise<{ qrCode: string }> {
     const newStampId = uuidv4();
     let qrCode: string;
     try {
-      await this.prisma.stamp.upsert({
+      await this.prisma.stamp.update({
         where: {
-          slug,
+          slugName,
         },
-        create: {
-          slug,
-          stampName,
-          stampId: newStampId,
-          timestamp: Date.now(),
-        },
-        update: {
+        data: {
           stampId: newStampId,
           timestamp: Date.now(),
         },
@@ -59,16 +65,14 @@ export class StampsService {
     return { isSuccess: isSuccess };
   }
 
-  async stampValidation(
-    stampId: string,
-    timestamp: number,
-  ): Promise<{ isValid: boolean }> {
+  async stampValidation(slugName: string, stampId: string, timestamp: number) {
     let isValid = false;
     try {
       await this.prisma.stamp
         .findUnique({
           where: {
             stampId,
+            slugName,
           },
         })
         .then((stamp) => {
@@ -79,6 +83,6 @@ export class StampsService {
       throw new BadRequestException(error.message);
     }
 
-    return { isValid: isValid };
+    return { isValid, timestamp: Date.now() };
   }
 }

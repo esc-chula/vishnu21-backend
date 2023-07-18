@@ -59,16 +59,11 @@ export class AuthService {
     );
     const user = await this.usersService.findOneByStudentId(studentId);
     if (!user) throw new UnauthorizedException('User not found');
-    console.log('User Logged In');
     await this.usersService.assignSSOTicket(studentId, ticket);
-    this.usersService
-      .updateUserProfile(user.userId, {
-        lineIdToken: lineToken,
-      })
-      .then(async (user) => {
-        console.log(await this.usersService.getLineProfile(user.userId));
+    if (lineToken)
+      this.usersService.updateUserProfile(user.userId, {
+        lineAccessToken: lineToken,
       });
-    this.logger.debug(JSON.stringify(user));
     if (returnModel) return user;
     return this.jwtService.sign(
       await this.usersService.getUserProfile(user.userId),
@@ -84,14 +79,18 @@ export class AuthService {
     return this.jwtService.decode(token);
   }
 
+  async getUserProfile(userId: string) {
+    return await this.usersService.getUserProfile(userId);
+  }
+
   async validateUser(userId: string) {
     return await this.usersService.findOne(userId).then(async (user) => {
       return await firstValueFrom(
         this.httpService
           .get('https://account.it.chula.ac.th/serviceValidation', {
             headers: {
-              DeeAppId: this.configService.get('DEEPAPP_ID'),
-              DeeAppSecret: this.configService.get('DEEPAPP_SECRET'),
+              DeeAppId: this.configService.get('DEEAPP_ID'),
+              DeeAppSecret: this.configService.get('DEEAPP_SECRET'),
               DeeTicket: user.ticketToken,
             },
           })

@@ -1,19 +1,22 @@
 import { Controller, Get, Param, Put, Body, Req, Query } from '@nestjs/common';
 import { StampsService } from './stamps.service';
 import { Prisma } from '@prisma/client';
-import { PublicRoute } from '@/auth/auth.decorator';
+import { AllowRoles, PublicRoute } from '@/auth/auth.decorator';
 
-@Controller('users/stamp')
+@Controller('stamps')
 export class StampsController {
   constructor(private stampsService: StampsService) {}
 
   @PublicRoute()
-  @Get('/:slug')
-  async generateStamp(
-    @Param('slug') slug: string,
-    @Query('stampName') stampName: string,
-  ) {
-    return this.stampsService.generateStamp(slug, stampName || 'Unknown Stamp');
+  @Get()
+  async getClubs() {
+    return this.stampsService.getAllClubs();
+  }
+
+  @AllowRoles('Stamp', 'IT', 'Activity', 'Admin', 'Board')
+  @Get('create/:slug')
+  async generateStamp(@Param('slug') slug: string) {
+    return this.stampsService.generateStamp(slug);
   }
 
   @Put()
@@ -26,11 +29,12 @@ export class StampsController {
   }
 
   @PublicRoute()
-  @Get()
+  @Get('validate')
   async stampValidation(
     @Query('stampId') stampId: string,
+    @Query('slug') slug: string,
     @Query('timestamp') timestamp: number,
   ) {
-    return this.stampsService.stampValidation(stampId, timestamp);
+    return this.stampsService.stampValidation(slug, stampId, timestamp);
   }
 }

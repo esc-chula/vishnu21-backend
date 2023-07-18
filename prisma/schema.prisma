@@ -21,30 +21,31 @@ enum Roles {
   Activity
   Board
   IT
+  Stamp
   HeadHouse
 }
 
 model User {
-  userId         String     @id @default(auto()) @map("_id") @db.ObjectId
-  name           String
-  nickname       String?
-  studentId      String     @unique
-  telNo          String?
-  instagram      String?
-  profilePicture String?
-  lineIdToken    String?
-  lineUsername   String?
-  lineUserId     String?
-  ticketToken    String?
-  status         Status?
-  roles          Roles[]    @default([User])
-  Group          Group?     @relation(fields: [groupId], references: [groupId])
-  groupId        String?    @db.ObjectId
-  Post           Post[]
-  GamePlay       GamePlay[]
-  Comment        Comment[]
-  stampCount     Int        @default(0)
-  stampCollected Json[]
+  userId          String     @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  nickname        String?
+  studentId       String     @unique
+  telNo           String?
+  instagram       String?
+  profilePicture  String?
+  lineAccessToken String?
+  lineUsername    String?
+  lineUserId      String?
+  ticketToken     String?
+  status          Status     @default(Unknown)
+  roles           Roles[]    @default([User])
+  Group           Group?     @relation(fields: [groupId], references: [groupId])
+  groupId         String?    @db.ObjectId
+  Post            Post[]
+  GamePlay        GamePlay[]
+  Comment         Comment[]
+  stampCount      Int        @default(0)
+  stampCollected  Json[]
 }
 
 type Contacts {
@@ -56,6 +57,7 @@ type Contacts {
 model Group {
   groupId      String         @id @default(auto()) @map("_id") @db.ObjectId
   houseName    String
+  shortName    String
   group        String
   description  String?
   score        Int?           @default(0)
@@ -63,7 +65,7 @@ model Group {
   members      User[]
   posts        Post[]
   ScoreHistory ScoreHistory[]
-  updatedAt    DateTime       @default(now())
+  updatedAt    DateTime?       @default(now())
 }
 
 model Post {
@@ -148,11 +150,24 @@ model ScoreHistory {
   updatedAt   DateTime @updatedAt
 }
 
+enum StampTag {
+  Academic
+  Sport
+  Art
+  CSR
+  Other
+}
+
 model Stamp {
-  id        String @id @default(auto()) @map("_id") @db.ObjectId
-  stampId   String @unique
-  stampName String
-  slug      String @unique
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  stampId   String   @unique
+  clubName  String
+  tag       StampTag
+  objective String   @default("")
+  previousActivity  String   @default("")
+  headquarter       String   @default("")
+  logo      String?
+  slugName      String   @unique
   timestamp Int
 }
 

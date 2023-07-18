@@ -1,48 +1,48 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/typescript-node
 {
-	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"name": "Vishnu21st Backend",
-	"image": "mcr.microsoft.com/devcontainers/typescript-node:0-20",
-	"features": {
-		"ghcr.io/devcontainers/features/github-cli:1": {},
-		"ghcr.io/devcontainers-contrib/features/nestjs-cli:2": {},
-		"ghcr.io/devcontainers-contrib/features/prisma:2": {}
-	},
+  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+  "name": "Vishnu21st Backend",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:0-20",
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers-contrib/features/nestjs-cli:2": {},
+    "ghcr.io/devcontainers-contrib/features/prisma:2": {}
+  },
 
-	// Features to add to the dev container. More info: https://containers.dev/features.
-	// "features": {},
+  // Features to add to the dev container. More info: https://containers.dev/features.
+  // "features": {},
 
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	"forwardPorts": [3000],
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  "forwardPorts": [4000],
 
-	//Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "npm install",
-	
-	// Configure tool-specific properties.
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"redhat.vscode-yaml",
-				"esbenp.prettier-vscode",
-				"christian-kohler.path-intellisense",
-				"yzhang.markdown-all-in-one",
-				"VisualStudioExptTeam.vscodeintellicode",
-				"eamodio.gitlens",
-				"GitHub.copilot",
-				"dbaeumer.vscode-eslint",
-				"EditorConfig.EditorConfig",
-				"ms-azuretools.vscode-docker",
-				"Prisma.prisma"
-			]
-		}
-	},
-	"portsAttributes": {
-		"3000": {
-			"label": "Backend"
-		}
-	},
+  //Use 'postCreateCommand' to run commands after the container is created.
+  "postCreateCommand": "npm install",
 
-	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	// "remoteUser": "root"
+  // Configure tool-specific properties.
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "redhat.vscode-yaml",
+        "esbenp.prettier-vscode",
+        "christian-kohler.path-intellisense",
+        "yzhang.markdown-all-in-one",
+        "VisualStudioExptTeam.vscodeintellicode",
+        "eamodio.gitlens",
+        "GitHub.copilot",
+        "dbaeumer.vscode-eslint",
+        "EditorConfig.EditorConfig",
+        "ms-azuretools.vscode-docker",
+        "Prisma.prisma"
+      ]
+    }
+  },
+  "portsAttributes": {
+    "4000": {
+      "label": "Backend"
+    }
+  }
+
+  // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+  // "remoteUser": "root"
 }

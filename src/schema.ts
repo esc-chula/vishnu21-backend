@@ -11,4 +11,5 @@ export const environmentValidator = Joi.object({
   DEEAPP_ID: Joi.string().required(),
   DEEAPP_SECRET: Joi.string().required(),
   LINE_CHANNEL_ACCESS_TOKEN: Joi.string().required(),
+  LINE_CHANNEL_CLIENT_ID: Joi.string().required(),
 });

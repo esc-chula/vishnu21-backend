@@ -12,7 +12,7 @@ export class GroupsController {
 
   @Get('/user')
   async getGroupInfoById(@Req() req: any) {
-    return await this.groupsService.getGroupInfoById(req.user.group);
+    return await this.groupsService.getGroupInfoById(req.user.groupId);
   }
 
   @Get('/emergency/:groupId')

@@ -22,11 +22,19 @@ export class GroupsService {
     try {
       const groupInfo: Group = await this.prisma.group.findUnique({
         where: { groupId },
+        include: { members: true, posts: true },
       });
       return groupInfo;
     } catch (error) {
       throw new BadRequestException(error.message);
     }
+  }
+
+  async addLineGroup(groupId: string, lineGroup: string): Promise<Group> {
+    return await this.prisma.group.update({
+      where: { groupId },
+      data: { lineGroup },
+    });
   }
 
   async getEmergency(groupId: string): Promise<{ contacts: Contacts[] }> {

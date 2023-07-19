@@ -12,6 +12,7 @@ enum Status {
   Intania106
   Intania107
   Testing
+  Dummy
   Unknown
 }
 
@@ -25,6 +26,8 @@ enum Roles {
   Activity
   Board
   IT
+  PR
+  RegistrationHouse
   Stamp
   HeadHouse
 }

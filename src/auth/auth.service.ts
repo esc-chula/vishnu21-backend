@@ -28,38 +28,49 @@ export class AuthService {
     lineToken?: string,
     returnModel?: boolean,
   ) {
-    const ticket = await firstValueFrom(
-      this.httpService
-        .post(
-          'https://account.it.chula.ac.th/login',
-          new URLSearchParams({
-            username: studentId,
-            password,
-            service: 'https://liff.vishnu21.chula.engineering/login',
-            serviceName: 'Vishnu21st Login Service',
-            remember: '1',
-          }),
-        )
-        .pipe(
-          map((res) => res.data),
-          map((data) => {
-            if (data.type === 'redirect') return data.ticket;
-            throw new UnauthorizedException('Invalid username or password');
-          }),
-        )
-        .pipe(
-          catchError((err) => {
-            if (err.status === 401) throw err;
-            this.logger.error(JSON.stringify(err));
-            throw new ServiceUnavailableException(
-              'Login service has been failed',
-            );
-          }),
-        ),
-    );
     const user = await this.usersService.findOneByStudentId(studentId);
     if (!user) throw new UnauthorizedException('User not found');
-    await this.usersService.assignSSOTicket(studentId, ticket);
+    if (user.status === 'Dummy' || user.status === 'Testing')
+      return this.jwtService.sign(
+        await this.usersService.getUserProfile(user.userId),
+        {
+          issuer: 'vishnu21st-it',
+          mutatePayload: true,
+          subject: user.userId,
+        },
+      );
+    else {
+      const ticket = await firstValueFrom(
+        this.httpService
+          .post(
+            'https://account.it.chula.ac.th/login',
+            new URLSearchParams({
+              username: studentId,
+              password,
+              service: 'https://liff.vishnu21.chula.engineering/login',
+              serviceName: 'Vishnu21st Login Service',
+              remember: '1',
+            }),
+          )
+          .pipe(
+            map((res) => res.data),
+            map((data) => {
+              if (data.type === 'redirect') return data.ticket;
+              throw new UnauthorizedException('Invalid username or password');
+            }),
+          )
+          .pipe(
+            catchError((err) => {
+              if (err.status === 401) throw err;
+              this.logger.error(JSON.stringify(err));
+              throw new ServiceUnavailableException(
+                'Login service has been failed',
+              );
+            }),
+          ),
+      );
+      await this.usersService.assignSSOTicket(studentId, ticket);
+    }
     if (lineToken)
       this.usersService.updateUserProfile(user.userId, {
         lineAccessToken: lineToken,

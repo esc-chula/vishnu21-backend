@@ -19,8 +19,23 @@ export class UsersService {
   async findOneByStudentId(studentId: string) {
     return this.prisma.user.findUnique({ where: { studentId } });
   }
+
   async findOne(userId: string) {
     return this.prisma.user.findFirst({ where: { userId } });
+  }
+
+  async findAll(page: number) {
+    return this.prisma.user.findMany({ select: 100, skip: 100 * page });
+  }
+
+  async findByName(key: string, page: number) {
+    return this.prisma.user.findFirst({
+      where: {
+        OR: [{ name: { contains: key } }, { nickname: { contains: key } }],
+      },
+      take: 100,
+      skip: page * 100,
+    });
   }
 
   async getUsers(): Promise<{

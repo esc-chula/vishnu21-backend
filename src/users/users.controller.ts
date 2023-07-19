@@ -1,8 +1,22 @@
-import { Body, Controller, Get, Patch, Post, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Req,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { AuthService } from '@/auth/auth.service';
 import { UserContactUpdateDto, UserLoginDto } from './users.dto';
-import { AllRoles, AllowRoles, PublicRoute } from '@/auth/auth.decorator';
+import {
+  AllRoles,
+  AllowRoles,
+  DenyRoles,
+  PublicRoute,
+} from '@/auth/auth.decorator';
 import { Roles, User } from '@prisma/client';
 
 @Controller('users')
@@ -24,6 +38,32 @@ export class UsersController {
   @Get()
   async getUsers() {
     return await this.usersService.getUsers();
+  }
+
+  @Get(':id')
+  async findUserById(@Param('id') id: string) {
+    return await this.usersService.findOne(id);
+  }
+
+  @DenyRoles('User', 'Stamp', 'CoreTeam')
+  @Get('student/:id')
+  async findUserByStudentId(@Param('id') id: string) {
+    return await this.usersService.findOneByStudentId(id);
+  }
+
+  @DenyRoles('User', 'Stamp', 'CoreTeam')
+  @Get('name')
+  async findUserByName(
+    @Query('name') name: string,
+    @Query('page') page: string,
+  ) {
+    return await this.usersService.findByName(name, +page || 0);
+  }
+
+  @DenyRoles('User', 'Stamp', 'CoreTeam')
+  @Get('name')
+  async finAll(@Query('page') page: string) {
+    return await this.usersService.findAll(+page || 0);
   }
 
   @AllRoles()

@@ -25,11 +25,11 @@ export class UsersService {
   }
 
   async findAll(page: number) {
-    return this.prisma.user.findMany({ select: 100, skip: 100 * page });
+    return this.prisma.user.findMany({ take: 100, skip: 100 * page });
   }
 
   async findByName(key: string, page: number) {
-    return this.prisma.user.findFirst({
+    return this.prisma.user.findMany({
       where: {
         OR: [{ name: { contains: key } }, { nickname: { contains: key } }],
       },

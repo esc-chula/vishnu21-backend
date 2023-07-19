@@ -40,7 +40,7 @@ export class UsersController {
     return await this.usersService.getUsers();
   }
 
-  @Get(':id')
+  @Get('id/:id')
   async findUserById(@Param('id') id: string) {
     return await this.usersService.findOne(id);
   }
@@ -61,7 +61,7 @@ export class UsersController {
   }
 
   @DenyRoles('User', 'Stamp', 'CoreTeam')
-  @Get('name')
+  @Get('all')
   async finAll(@Query('page') page: string) {
     return await this.usersService.findAll(+page || 0);
   }

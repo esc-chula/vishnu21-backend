@@ -18,6 +18,18 @@ export class GroupsService {
     }
   }
 
+  async getGroupInfoByname(group: string) {
+    try {
+      const groupInfo: Group = await this.prisma.group.findFirst({
+        where: { group },
+        include: { members: true, posts: true },
+      });
+      return groupInfo;
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
   async getGroupInfoById(groupId: string): Promise<Group> {
     try {
       const groupInfo: Group = await this.prisma.group.findUnique({

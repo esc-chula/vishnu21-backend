@@ -23,6 +23,12 @@ export class GroupsController {
     return await this.groupsService.getGroupInfoById(id);
   }
 
+  @Get('/name/:id')
+  @DenyRoles('User', 'Stamp', 'CoreTeam')
+  async getGroupInfoByName(@Param('id') id: any) {
+    return await this.groupsService.getGroupInfoById(id);
+  }
+
   @AllowRoles('HeadHouse', 'COOP', 'Admin')
   @Patch('line')
   async addLineGroup(@Req() req: any, @Body('lineGroup') lineGroup: string) {

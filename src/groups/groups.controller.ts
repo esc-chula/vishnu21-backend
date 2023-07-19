@@ -26,7 +26,7 @@ export class GroupsController {
   @Get('/name/:id')
   @DenyRoles('User', 'Stamp', 'CoreTeam')
   async getGroupInfoByName(@Param('id') id: any) {
-    return await this.groupsService.getGroupInfoById(id);
+    return await this.groupsService.getGroupInfoByname(id);
   }
 
   @AllowRoles('HeadHouse', 'COOP', 'Admin')

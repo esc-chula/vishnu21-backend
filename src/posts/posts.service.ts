@@ -9,11 +9,21 @@ export class PostsService {
 
   async getPosts(): Promise<Post[]> {
     try {
-      const posts = await this.prisma.post.findMany();
+      const posts = await this.prisma.post.findMany({
+        orderBy: { updatedAt: 'desc' },
+      });
       return posts;
     } catch (error) {
       throw new BadRequestException(error.message);
     }
+  }
+
+  getPostsByGroup(groupId: string): Promise<Post[]> {
+    return this.prisma.post.findMany({
+      where: { OR: [{ isGlobal: true }, { groupId }] },
+      include: { author: true, comments: true },
+      orderBy: { updatedAt: 'desc' },
+    });
   }
 
   async getPostById(id: string): Promise<Post> {
@@ -30,13 +40,48 @@ export class PostsService {
     }
   }
 
-  createPost(payload: PostsDTO): Promise<Post> {
-    // I think that authorId should be the id of the user that is logged in so wait for the auth module
+  createPost(payload: PostsDTO, groupId?: string): Promise<Post> {
     try {
       const post = this.prisma.post.create({
         data: {
           ...payload,
-          isGlobal: payload.groupId ? false : true,
+          groupId: groupId ? groupId : payload.groupId,
+          isGlobal: payload.groupId || groupId ? false : true,
+        },
+      });
+      return post;
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async createPostToGroup(payload: PostsDTO, groupName: string): Promise<Post> {
+    try {
+      const groupId = await this.prisma.group
+        .findFirst({
+          where: { group: groupName },
+        })
+        .then((group) => group.groupId);
+      const post = this.prisma.post.create({
+        data: {
+          ...payload,
+          groupId,
+          isGlobal: false,
+        },
+      });
+      return post;
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  createPublicPost(payload: PostsDTO): Promise<Post> {
+    try {
+      const post = this.prisma.post.create({
+        data: {
+          ...payload,
+          groupId: undefined,
+          isGlobal: true,
         },
       });
       return post;

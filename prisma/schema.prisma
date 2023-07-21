@@ -32,6 +32,13 @@ enum Roles {
   HeadHouse
 }
 
+enum Gender {
+  Male
+  Female
+  Other
+  NotToSay
+}
+
 model User {
   userId          String     @id @default(auto()) @map("_id") @db.ObjectId
   name            String
@@ -41,8 +48,11 @@ model User {
   instagram       String?
   profilePicture  String?
   lineAccessToken String?
+  lineId          String?
   lineUsername    String?
   lineUserId      String?
+  department      String?    @default("Engineering")
+  gender          Gender?    @default(NotToSay)
   ticketToken     String?
   status          Status     @default(Unknown)
   roles           Roles[]    @default([User])

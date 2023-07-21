@@ -37,7 +37,7 @@ export class StampsService {
         },
       });
 
-      qrCode = await qrcode.toDataURL(newStampId);
+      qrCode = await qrcode.toDataURL(JSON.stringify({ slugName, newStampId }));
     } catch (error) {
       throw new BadRequestException(error.message);
     }

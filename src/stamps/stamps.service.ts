@@ -23,26 +23,52 @@ export class StampsService {
     });
   }
 
-  async generateStamp(slugName: string): Promise<{ qrCode: string }> {
-    const newStampId = uuidv4();
-    let qrCode: string;
+  async getClub(id: string) {
+    return await this.prisma.stamp.findFirst({
+      where: { id },
+      select: {
+        clubName: true,
+        objective: true,
+        previousActivity: true,
+        headquarter: true,
+        slugName: true,
+        tag: true,
+        logo: true,
+        id: true,
+      },
+    });
+  }
+
+  async generateStamp(
+    slugName: string,
+  ): Promise<{ qrCode: string; clubName: string }> {
     try {
+      const stampId = uuidv4();
+      const clubName = await this.prisma.stamp
+        .findUnique({
+          where: { slugName },
+        })
+        .then((club) => {
+          if (club) return club.clubName;
+          else throw new BadRequestException('Club not found');
+        });
       await this.prisma.stamp.update({
         where: {
           slugName,
         },
         data: {
-          stampId: newStampId,
+          stampId,
           timestamp: Date.now(),
         },
       });
 
-      qrCode = await qrcode.toDataURL(JSON.stringify({ slugName, newStampId }));
+      return {
+        qrCode: await qrcode.toDataURL(JSON.stringify({ slugName, stampId })),
+        clubName,
+      };
     } catch (error) {
       throw new BadRequestException(error.message);
     }
-
-    return { qrCode: qrCode };
   }
 
   async stampSubmission(
@@ -66,23 +92,28 @@ export class StampsService {
   }
 
   async stampValidation(slugName: string, stampId: string, timestamp: number) {
-    let isValid = false;
-    try {
-      await this.prisma.stamp
-        .findUnique({
-          where: {
-            stampId,
-            slugName,
-          },
-        })
-        .then((stamp) => {
-          const millis = timestamp - stamp.timestamp;
-          if (stamp && Math.floor(millis / 1000) <= 300) isValid = true;
-        });
-    } catch (error) {
-      throw new BadRequestException(error.message);
-    }
-
-    return { isValid, timestamp: Date.now() };
+    return await this.prisma.stamp
+      .findUnique({
+        where: {
+          stampId,
+          slugName,
+        },
+      })
+      .then((stamp) => {
+        const millis = timestamp - stamp.timestamp;
+        if (stamp && Math.floor(millis / 1000) <= 300)
+          return {
+            isValid: true,
+            stampHash: stamp.id,
+            timestamp: Date.now(),
+          };
+        return {
+          isValid: false,
+          timestamp: Date.now(),
+        };
+      })
+      .catch((error) => {
+        throw new BadRequestException(error.message);
+      });
   }
 }

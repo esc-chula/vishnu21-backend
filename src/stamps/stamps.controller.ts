@@ -13,6 +13,12 @@ export class StampsController {
     return this.stampsService.getAllClubs();
   }
 
+  @PublicRoute()
+  @Get('info/:id')
+  async getClub(@Param('id') id: string) {
+    return this.stampsService.getClub(id);
+  }
+
   @AllowRoles('Stamp', 'IT', 'Activity', 'Admin', 'Board')
   @Get('create/:slug')
   async generateStamp(@Param('slug') slug: string) {

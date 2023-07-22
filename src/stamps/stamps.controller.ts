@@ -40,6 +40,6 @@ export class StampsController {
     @Query('slug') slug: string,
     @Query('timestamp') timestamp: string,
   ) {
-    return this.stampsService.stampValidation(slug, stampId, +timestamp || Date.now());
+    return this.stampsService.stampValidation(slug, stampId, +timestamp || Date.now())};
   }
 }

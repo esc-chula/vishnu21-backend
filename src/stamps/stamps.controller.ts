@@ -39,8 +39,8 @@ export class StampsController {
   async stampValidation(
     @Query('stampId') stampId: string,
     @Query('slug') slug: string,
-    @Query('timestamp') timestamp: number,
+    @Query('timestamp') timestamp: string,
   ) {
-    return this.stampsService.stampValidation(slug, stampId, timestamp);
+    return this.stampsService.stampValidation(slug, stampId, +timestamp);
   }
 }

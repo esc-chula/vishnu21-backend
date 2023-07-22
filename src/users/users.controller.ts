@@ -73,7 +73,7 @@ export class UsersController {
   }
 
   @AllowRoles(Roles.Admin, Roles.IT, Roles.Board, Roles.HeadHouse)
-  @Patch(':id')
+  @Patch('profile/:id')
   async updateUserProfileById(@Param('id') userId: string, @Body() body: User) {
     return await this.usersService.updateUserProfile(userId, body);
   }

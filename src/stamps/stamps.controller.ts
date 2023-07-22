@@ -23,7 +23,6 @@ export class StampsController {
   @Get('create/:slug')
   async generateStamp(@Param('slug') slug: string) {
     return this.stampsService.generateStamp(slug);
-  }
 
   @Put()
   async stampSubmission(
@@ -41,6 +40,6 @@ export class StampsController {
     @Query('slug') slug: string,
     @Query('timestamp') timestamp: string,
   ) {
-    return this.stampsService.stampValidation(slug, stampId, +timestamp);
+    return this.stampsService.stampValidation(slug, stampId, +timestamp || Date.now());
   }
 }

@@ -23,6 +23,7 @@ export class StampsController {
   @Get('create/:slug')
   async generateStamp(@Param('slug') slug: string) {
     return this.stampsService.generateStamp(slug);
+}
 
   @Put()
   async stampSubmission(

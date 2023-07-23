@@ -20,21 +20,25 @@ export class ScoresService {
     await this.prisma.group.findMany().then((groups) => {
       groups.forEach((group, index) => {
         result.scores.push({
-          name: group.houseName,
-          score: group.score,
+          name: group.groupId,
+          shortName: group.shortName,
+          score: group.score || 0,
         });
         if (index == 0) result.updatedAt = group.updatedAt;
         if (group.updatedAt > result.updatedAt)
           result.updatedAt = group.updatedAt;
       });
     });
+    result.scores.sort((a, b) => b.score - a.score);
+    if (!result.updatedAt) result.updatedAt = new Date();
     return result;
   }
 
-  async getScoreByHouseName(houseName: string) {
+  async getScoreByHouseId(groupId: string) {
     let result = {
-      name: null,
-      score: null,
+      groupId: null,
+      score: 0,
+      shortName: '',
       details: [],
       updatedAt: null,
     };
@@ -43,18 +47,28 @@ export class ScoresService {
       await this.prisma.group
         .findFirstOrThrow({
           where: {
-            houseName,
+            groupId,
           },
           include: {
-            ScoreHistory: true,
+            ScoreHistory: {
+              orderBy: {
+                createdAt: 'desc',
+              },
+            },
           },
         })
         .then((group) => {
-          result = { ...result, name: group.houseName, score: group.score };
+          result = {
+            ...result,
+            groupId: group.groupId,
+            shortName: group.shortName,
+            score: group.score || 0,
+          };
           group.ScoreHistory.forEach((scoreHistory, index) => {
             result.details.push({
+              id: scoreHistory.scoreId,
               info: scoreHistory.info,
-              score: scoreHistory.score,
+              score: scoreHistory.score || 0,
               createdAt: scoreHistory.createdAt,
             });
             if (scoreHistory.createdAt > result.updatedAt)

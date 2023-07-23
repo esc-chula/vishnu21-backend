@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Patch, Req } from '@nestjs/common';
 import { GroupsService } from './groups.service';
 import { EmergencyDTO } from './types/emergency.dto';
-import { AllowRoles, DenyRoles } from '@/auth/auth.decorator';
+import { AllowRoles, DenyRoles, PublicRoute } from '@/auth/auth.decorator';
 
 @Controller('groups')
 export class GroupsController {
@@ -21,6 +21,12 @@ export class GroupsController {
   @DenyRoles('User', 'Stamp', 'CoreTeam')
   async getGroupInfo(@Param('id') id: any) {
     return await this.groupsService.getGroupInfoById(id);
+  }
+
+  @PublicRoute()
+  @Get('contact/:id')
+  async getGroupContactInfo(@Param('id') id: any) {
+    return await this.groupsService.getGroupContactInfoById(id);
   }
 
   @Get('/name/:id')

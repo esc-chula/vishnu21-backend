@@ -42,6 +42,18 @@ export class GroupsService {
     }
   }
 
+  async getGroupContactInfoById(groupId: string) {
+    try {
+      const groupInfo = await this.prisma.group.findUnique({
+        where: { groupId },
+        select: { contacts: true },
+      });
+      return groupInfo;
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
   async addLineGroup(groupId: string, lineGroup: string): Promise<Group> {
     return await this.prisma.group.update({
       where: { groupId },

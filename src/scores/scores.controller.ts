@@ -6,22 +6,30 @@ import {
   Param,
   Patch,
   Post,
+  Req,
 } from '@nestjs/common';
 import { ScoresService } from './scores.service';
 import { ScoresHistoryDTO } from './types/scores.dto';
+import { AllowRoles, PublicRoute } from '@/auth/auth.decorator';
 
 @Controller('scores')
 export class ScoresController {
   constructor(private scoresService: ScoresService) {}
 
   @Get()
+  @PublicRoute()
   getScores() {
     return this.scoresService.getScores();
   }
 
-  @Get('/:houseName')
-  getScoreByHouseName(@Param('houseName') houseName: string) {
-    return this.scoresService.getScoreByHouseName(houseName);
+  @Get('/user')
+  getUserScore(@Req() req: any) {
+    return this.scoresService.getScoreByHouseId(req.user.groupId);
+  }
+
+  @Get('/house/:id')
+  getScoreByHouseId(@Param('id') id: string) {
+    return this.scoresService.getScoreByHouseId(id);
   }
 
   @Post()
@@ -31,11 +39,13 @@ export class ScoresController {
     return await this.scoresService.createScoreHistory(scoresHistoryDTO);
   }
 
+  @AllowRoles('Activity', 'IT', 'Admin', 'Board')
   @Patch('/:id')
   updateScores(@Param('id') id: string, @Body() payload: ScoresHistoryDTO) {
     return this.scoresService.updateScores(id, payload);
   }
 
+  @AllowRoles('Activity', 'IT', 'Admin', 'Board')
   @Delete('/:_oid')
   deleteScoreHistory(@Param('_oid') _oid: string) {
     return this.scoresService.deleteScoreHistory(_oid);

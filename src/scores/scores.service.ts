@@ -50,7 +50,11 @@ export class ScoresService {
             groupId,
           },
           include: {
-            ScoreHistory: true,
+            ScoreHistory: {
+              orderBy: {
+                createdAt: 'desc',
+              },
+            },
           },
         })
         .then((group) => {
@@ -62,6 +66,7 @@ export class ScoresService {
           };
           group.ScoreHistory.forEach((scoreHistory, index) => {
             result.details.push({
+              id: scoreHistory.scoreId,
               info: scoreHistory.info,
               score: scoreHistory.score || 0,
               createdAt: scoreHistory.createdAt,

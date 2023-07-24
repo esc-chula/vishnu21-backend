@@ -29,6 +29,9 @@ export class GameDTO {
   isIndividual?: boolean;
   @IsDate()
   expiresAt: Date;
+  @IsDate()
+  @IsOptional()
+  startedAt: Date;
 }
 
 export class GameSubmitDTO {

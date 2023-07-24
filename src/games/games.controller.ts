@@ -6,7 +6,6 @@ import {
   Param,
   Patch,
   Post,
-  Query,
   Req,
 } from '@nestjs/common';
 import { Roles } from '@prisma/client';
@@ -20,8 +19,20 @@ export class GamesController {
 
   @AllRoles()
   @Get()
-  getGames(@Req() req: any, @Query('all') all: boolean) {
-    return this.gamesService.getGames(req.user.userId, all || false);
+  getGames(@Req() req: any) {
+    return this.gamesService.getGames(req.user.userId);
+  }
+
+  @Get(':id')
+  @AllowRoles(Roles.Admin, Roles.IT, Roles.Activity, 'Board', 'PR')
+  getGameByID(@Param('id') gameId: string) {
+    return this.gamesService.getGameById(gameId);
+  }
+
+  @Get('play/:id')
+  @AllRoles()
+  getGameToPlay(@Param('id') gameId: string) {
+    return this.gamesService.getGameToPlay(gameId);
   }
 
   @Post()

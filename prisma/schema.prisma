@@ -130,6 +130,7 @@ model Game {
   maxScore       Int?
   isIndividual   Boolean?    @default(false)
   createdAt      DateTime    @default(now())
+  startedAt        DateTime    @default(now())
   expiresAt      DateTime?
   GamePlay       GamePlay[]
 }

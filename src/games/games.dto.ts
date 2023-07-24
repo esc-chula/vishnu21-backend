@@ -31,6 +31,13 @@ export class GameDTO {
   expiresAt: Date;
 }
 
+export class GameSubmitDTO {
+  @IsNotEmpty()
+  gameId: string;
+  @IsNotEmpty()
+  choiceId: string;
+}
+
 export class updateGameDTO {
   @IsOptional()
   @IsString()

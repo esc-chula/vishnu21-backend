@@ -16,22 +16,22 @@ import { AllowRoles } from '@/auth/auth.decorator';
 export class PostsController {
   constructor(private postsService: PostsService) {}
 
-  @Get('/')
+  @Get()
   getPosts() {
     return this.postsService.getPosts();
   }
 
-  @Get('/group')
+  @Get('group')
   getPostsByGroup(@Req() req: any) {
     return this.postsService.getPostsByGroup(req.user.groupId);
   }
 
-  @Get('/:id')
+  @Get('group/:id')
   getPostsById(@Param('id') id: string) {
     return this.postsService.getPostById(id);
   }
 
-  @Post('/')
+  @Post()
   @AllowRoles('HeadHouse', 'Registration', 'Admin')
   createPost(@Body() payload: PostsDTO, @Req() req: any) {
     return this.postsService.createPost(
@@ -43,7 +43,7 @@ export class PostsController {
     );
   }
 
-  @Post('/group/:groupName')
+  @Post('group/:groupName')
   @AllowRoles('Registration', 'Admin')
   createPostToGroup(
     @Body() payload: PostsDTO,
@@ -59,7 +59,7 @@ export class PostsController {
     );
   }
 
-  @Post('/public')
+  @Post('public')
   @AllowRoles('Registration', 'Admin')
   createPublicPost(
     @Body() payload: PostsDTO,
@@ -72,13 +72,13 @@ export class PostsController {
     });
   }
 
-  @Patch('/:id')
+  @Patch(':id')
   @AllowRoles('HeadHouse', 'Registration', 'Admin')
   updatePost(@Param('id') id: string, @Body() payload: any) {
     return this.postsService.updatePost(id, payload);
   }
 
-  @Delete('/:id')
+  @Delete(':id')
   @AllowRoles('HeadHouse', 'Registration', 'Admin')
   deletePost(@Param('id') id: string) {
     return this.postsService.deletePost(id);

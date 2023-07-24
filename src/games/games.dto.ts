@@ -29,6 +29,16 @@ export class GameDTO {
   isIndividual?: boolean;
   @IsDate()
   expiresAt: Date;
+  @IsDate()
+  @IsOptional()
+  startedAt: Date;
+}
+
+export class GameSubmitDTO {
+  @IsNotEmpty()
+  gameId: string;
+  @IsNotEmpty()
+  choiceId: string;
 }
 
 export class updateGameDTO {

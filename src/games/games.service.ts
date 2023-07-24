@@ -7,30 +7,59 @@ import { GameDTO, GameSubmitDTO, updateGameDTO } from './games.dto';
 export class GamesService {
   constructor(private prisma: PrismaService) {}
 
-  async getGames(userId: string, all?: boolean) {
-    return await this.prisma.game.findMany({
-      where: all ? {} : { NOT: { GamePlay: { some: { userId } } } },
+  async getGameById(id: string) {
+    return await this.prisma.game.findUnique({ where: { gameId: id } });
+  }
+
+  async getGameToPlay(id: string) {
+    return await this.prisma.game.findUnique({
+      where: { gameId: id },
       select: {
-        gameId: true,
-        GamePlay: false,
-        choices: true,
-        description: true,
-        expiresAt: true,
-        hint: false,
-        isIndividual: true,
-        maxParticipant: true,
-        maxScore: true,
-        scoring: true,
         title: true,
-        createdAt: true,
+        description: true,
+        choices: true,
+        expiresAt: true,
+        startedAt: true,
       },
     });
+  }
+
+  async getGames(userId: string) {
+    return await this.prisma.game
+      .findMany({
+        select: {
+          gameId: true,
+          GamePlay: true,
+          choices: false,
+          description: true,
+          expiresAt: true,
+          hint: false,
+          isIndividual: true,
+          maxParticipant: true,
+          maxScore: true,
+          scoring: true,
+          title: true,
+          startedAt: true,
+          createdAt: true,
+        },
+      })
+      .then((games) => {
+        return games.map((game) => {
+          return {
+            ...game,
+            submitted:
+              game.GamePlay.filter((play) => play.userId === userId).length > 0,
+            GamePlay: undefined,
+          };
+        });
+      });
   }
 
   async createGame(payload: GameDTO): Promise<Game> {
     const game = await this.prisma.game
       .create({
         data: {
+          startedAt: new Date(),
           ...payload,
         },
       })
@@ -69,21 +98,35 @@ export class GamesService {
   }
 
   async submitGame(userId: string, payload: GameSubmitDTO) {
+    const group = await this.prisma.group.findFirst({
+      where: { members: { some: { userId: userId } } },
+      include: { members: true },
+    });
     const game = await this.prisma.game
       .findUnique({
-        where: { gameId: payload.gameId },
+        where: {
+          gameId: payload.gameId,
+          expiresAt: { gt: new Date() },
+          startedAt: { lt: new Date() },
+        },
         include: { GamePlay: true },
       })
       .then((game) => game)
       .catch((error) => {
         console.error(error);
-        throw new BadRequestException('Game not found', error);
+        throw new BadRequestException('ไม่เจอเกมที่เล่นได้ค้าบบ', error);
       });
+    if (!game) throw new BadRequestException('ไม่เจอเกมที่เล่นได้ค้าบบ');
     if (
-      game.GamePlay.filter((gameplay) => gameplay.userId === userId).length > 0
+      game.GamePlay.filter(
+        (gameplay) =>
+          gameplay.userId === userId ||
+          (!game.isIndividual &&
+            group.members.filter((member) => member.userId === gameplay.userId)
+              .length > 0),
+      ).length > 0
     )
-      throw new BadRequestException('You already submit this game');
-    if (!game) throw new BadRequestException('Game not found');
+      throw new BadRequestException('ส่งซ้ำมาตะมัย T-T');
     const score =
       payload.choiceId === game.hint
         ? this.scoreCounter(

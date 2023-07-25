@@ -1,7 +1,7 @@
 import { Controller, Get, Param, Put, Body, Req, Query } from '@nestjs/common';
 import { StampsService } from './stamps.service';
 import { Prisma } from '@prisma/client';
-import { AllowRoles, PublicRoute } from '@/auth/auth.decorator';
+import { PublicRoute } from '@/auth/auth.decorator';
 
 @Controller('stamps')
 export class StampsController {
@@ -19,11 +19,11 @@ export class StampsController {
     return this.stampsService.getClub(id);
   }
 
-  @AllowRoles('Stamp', 'IT', 'Activity', 'Admin', 'Board')
+  @PublicRoute()
   @Get('create/:slug')
   async generateStamp(@Param('slug') slug: string) {
     return this.stampsService.generateStamp(slug);
-  }
+}
 
   @Put()
   async stampSubmission(
@@ -38,9 +38,8 @@ export class StampsController {
   @Get('validate')
   async stampValidation(
     @Query('stampId') stampId: string,
-    @Query('slug') slug: string,
-    @Query('timestamp') timestamp: number,
+    @Query('slug') slug: string
   ) {
-    return this.stampsService.stampValidation(slug, stampId, timestamp);
+    return this.stampsService.stampValidation(slug, stampId, Date.now());
   }
 }
